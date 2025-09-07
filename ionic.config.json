@@ -1,0 +1,10 @@
+{
+  "name": "EduBox",
+  "integrations": {
+    "capacitor": {
+      "enabled": false
+    },
+    "cordova": {}
+  },
+  "type": "angular"
+}

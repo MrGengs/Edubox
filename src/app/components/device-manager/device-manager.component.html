@@ -1,0 +1,54 @@
+<div class="device-manager">
+  <div class="device-actions">
+    <h3>Connect Device</h3>
+    <div class="button-group">
+      <ion-button expand="block" (click)="connectToDevice('arduino')" [disabled]="isLoading">
+        <ion-icon slot="start" name="hardware-chip"></ion-icon>
+        Connect Arduino
+      </ion-button>
+      <ion-button expand="block" (click)="connectToDevice('led-cube')" [disabled]="isLoading">
+        <ion-icon slot="start" name="cube"></ion-icon>
+        Connect LED Cube
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="connected-devices" *ngIf="devices.length > 0">
+    <h3>Connected Devices</h3>
+    
+    <ion-list>
+      <ion-item *ngFor="let device of devices" class="device-item">
+        <ion-icon [name]="device.type === 'arduino' ? 'hardware-chip' : 'cube'" slot="start"></ion-icon>
+        <ion-label>
+          <h2>{{ device.name }}</h2>
+          <p>Type: {{ device.type }}</p>
+          <p>Status: {{ device.connected ? 'Connected' : 'Disconnected' }}</p>
+          <p *ngIf="device.lastSeen">Last seen: {{ device.lastSeen | date:'short' }}</p>
+        </ion-label>
+        
+        <div slot="end" class="device-actions">
+          <ion-button *ngIf="device.connected" fill="clear" (click)="disconnectDevice(device.id)">
+            <ion-icon name="power" color="danger"></ion-icon>
+          </ion-button>
+          
+          <div *ngIf="device.connected" class="test-command">
+            <ion-input 
+              [(ngModel)]="testCommand" 
+              placeholder="Enter command"
+              (keyup.enter)="sendTestCommand(device)">
+            </ion-input>
+            <ion-button fill="clear" (click)="sendTestCommand(device)">
+              <ion-icon name="send"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div *ngIf="error" class="error-message">
+    <ion-text color="danger">{{ error }}</ion-text>
+  </div>
+  
+  <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+</div>

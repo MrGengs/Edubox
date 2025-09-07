@@ -1,0 +1,734 @@
+/* Terms and Conditions Styles */
+.terms-container {
+  margin: 1.5rem 0;
+  
+  .terms-item {
+    --background: transparent;
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    --min-height: auto;
+    --border-radius: 12px;
+    margin-bottom: 0.5rem;
+    align-items: flex-start;
+
+    ion-checkbox {
+      --size: 20px;
+      --background: var(--ion-color-light);
+      --background-checked: var(--ion-color-primary);
+      --border-color: var(--ion-color-medium);
+      --border-color-checked: var(--ion-color-primary);
+      --checkmark-color: white;
+      margin-right: 12px;
+      margin-top: 4px;
+    }
+  }
+
+  .terms-label {
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+    line-height: 1.5;
+    margin: 0;
+    white-space: normal;
+  }
+
+  .terms-link {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--ion-color-primary-shade);
+      text-decoration: underline;
+    }
+  }
+
+  .required-asterisk {
+    color: var(--ion-color-danger);
+    margin-left: 2px;
+  }
+}
+
+// Hide default password reveal button in all browsers
+input[type="password"],
+input[type="text"] {
+  &::-ms-reveal,
+  &::-ms-clear,
+  &::-webkit-contacts-auto-fill-button,
+  &::-webkit-credentials-auto-fill-button,
+  &::-webkit-textfield-decoration-container,
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-decoration,
+  &::-webkit-password-strength,
+  &::-webkit-password-reveal,
+  &::-webkit-credentials-auto-fill-button,
+  &::-webkit-credentials-autofill-button,
+  &::-webkit-caps-lock-indicator,
+  &::-webkit-credentials-auto-fill-indicator,
+  &::-webkit-credentials-autofill-indicator {
+    display: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    right: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+  
+  // Remove autofill background color
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--ion-color-light) inset !important;
+    -webkit-text-fill-color: var(--ion-text-color) !important;
+  }
+}
+
+ion-content {
+  --background: linear-gradient(135deg, var(--ion-color-light) 0%, var(--ion-color-light-shade) 100%);
+  --padding-start: 1.5rem;
+  --padding-end: 1.5rem;
+  --padding-top: 1.5rem;
+  --padding-bottom: 2rem;
+  
+  // Custom scrollbar
+  --overflow: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--ion-color-medium);
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
+
+.register-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px 0 40px;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+  @media (min-height: 700px) {
+    padding: 40px 0;
+  }
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  animation: fadeIn 0.5s ease-out;
+
+  .logo {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 1.2rem;
+    border-radius: 24px;
+    background: #fff;
+    padding: 1rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  h1 {
+    color: var(--ion-color-primary);
+    font-weight: 700;
+    margin: 0.8rem 0 0.5rem;
+    font-size: 1.8rem;
+    line-height: 1.2;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+}
+
+// Form styling
+form {
+  animation: slideUp 0.5s ease-out;
+  
+  .register-button {
+    --border-radius: 12px;
+    --box-shadow: 0 4px 16px rgba(var(--ion-color-primary-rgb), 0.2);
+    --background: var(--ion-color-primary);
+    --background-activated: var(--ion-color-primary-shade);
+    --background-focused: var(--ion-color-primary-tint);
+    --background-hover: var(--ion-color-primary-tint);
+    font-weight: 600;
+    height: 50px;
+    margin: 1.8rem 0 1.5rem;
+    text-transform: none;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
+    
+    .button-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    ion-icon {
+      font-size: 1.2em;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover:not([disabled]) {
+      --box-shadow: 0 6px 20px rgba(var(--ion-color-primary-rgb), 0.3);
+      transform: translateY(-2px);
+      
+      ion-icon {
+        transform: translateX(4px);
+      }
+    }
+    
+    &:active:not([disabled]) {
+      --box-shadow: 0 2px 10px rgba(var(--ion-color-primary-rgb), 0.3);
+      transform: translateY(1px);
+    }
+    
+    &[disabled] {
+      --opacity: 0.7;
+      --background: var(--ion-color-medium);
+      --box-shadow: none;
+    }
+  }
+  
+  .google-login-btn {
+    --background: #ffffff;
+    --color: #3c4043;
+    --border-color: #dadce0;
+    --border-width: 1px;
+    --border-style: solid;
+    --border-radius: 20px;
+    --box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    margin: 16px 0;
+    height: 44px;
+    text-transform: none;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.25px;
+    transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: relative;
+    
+    .google-button-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .google-logo {
+      margin-right: 12px;
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    
+    .google-button-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .google-spinner {
+      position: absolute;
+      right: 12px;
+      --color: #5f6368;
+    }
+    
+    &:hover:not([disabled]) {
+      --box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+      transform: translateY(-1px);
+    }
+    
+    &:active:not([disabled]) {
+      --box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+      transform: translateY(0);
+    }
+    
+    &:disabled {
+      --background: #f8f9fa;
+      --color: #9aa0a6;
+      --border-color: #f1f3f4;
+      --box-shadow: none;
+      transform: none;
+      opacity: 0.7;
+      
+      .google-logo {
+        opacity: 0.6;
+      }
+    }
+    
+    /* Animation for loading state */
+    &[disabled] .google-button-text {
+      margin-right: 24px;
+    }
+  }
+}
+
+// Form group styling
+.form-group {
+  margin-bottom: 1.8rem;
+  position: relative;
+  
+  .password-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    
+    .strength-meter {
+  font-size: 0.8rem;
+  margin-left: auto;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--ion-color-medium);
+  }
+  
+  &.strength-1::before {
+    background-color: #ff4444;
+  }
+  
+  &.strength-2::before {
+    background-color: #ffbb33;
+  }
+  
+  &.strength-3::before {
+    background-color: #00C851;
+  }
+  
+  &.strength-4::before {
+    background-color: #00C851;
+  }
+      color: var(--ion-color-medium);
+      
+      &.weak { color: var(--ion-color-danger); }
+      &.medium { color: var(--ion-color-warning); }
+      &.strong { color: var(--ion-color-success); }
+    }
+  }
+  
+  .input-label {
+    display: block;
+    font-weight: 500;
+    color: var(--ion-color-medium);
+    margin-bottom: 8px;
+    font-size: 14px;
+    transition: color 0.3s ease;
+  }
+  
+  .error-message {
+    display: block;
+    color: var(--ion-color-danger);
+    font-size: 0.8rem;
+    margin: 6px 0 0 4px;
+    display: flex;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+    
+    ion-icon {
+      font-size: 1.1em;
+      margin-right: 4px;
+    }
+  }
+  
+  .hint {
+    color: var(--ion-color-medium);
+    font-size: 0.8rem;
+    margin: 8px 0 0 4px;
+    display: flex;
+    align-items: center;
+    
+    ion-icon {
+      font-size: 1.1em;
+      margin-right: 6px;
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+/* Input item styling */
+.input-item {
+  --background: #fff;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 8px;
+  --min-height: 56px;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: var(--ion-color-medium-shade);
+  --highlight-color-focused: var(--ion-color-primary);
+  --highlight-color-valid: var(--ion-color-success);
+  --highlight-color-invalid: var(--ion-color-danger);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.ion-invalid {
+    --border-color: var(--ion-color-danger);
+    --highlight-color: var(--ion-color-danger);
+  }
+  
+  &.ion-valid {
+    --border-color: var(--ion-color-success);
+    --highlight-color: var(--ion-color-success);
+  }
+  
+  &.ion-touched.ion-invalid {
+    --color: var(--ion-color-danger);
+  }
+  
+  ion-icon {
+    color: var(--ion-color-medium);
+    font-size: 1.2em;
+    margin-right: 12px;
+  }
+  --inner-padding-end: 8px;
+  --min-height: 56px;
+  margin-bottom: 4px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1.5px solid var(--ion-color-light-shade);
+  overflow: visible;
+  
+  &:hover, &:focus-within {
+    border-color: var(--ion-color-primary);
+    box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.12);
+    
+    ion-icon {
+      color: var(--ion-color-primary);
+    }
+  }
+  
+  &.ion-invalid {
+    border-color: var(--ion-color-danger);
+    
+    ion-icon {
+      color: var(--ion-color-danger);
+    }
+  }
+  
+  &.ion-valid {
+    border-color: var(--ion-color-success);
+    
+    ion-icon {
+      color: var(--ion-color-success);
+    }
+  }
+  
+  ion-icon {
+    color: var(--ion-color-medium);
+    font-size: 1.3rem;
+    margin-right: 12px;
+    transition: color 0.3s ease;
+  }
+  
+  .native-input {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ion-text-color);
+    caret-color: var(--ion-color-primary);
+    letter-spacing: 0.2px;
+    
+    &::placeholder {
+      color: var(--ion-color-medium);
+      opacity: 0.8;
+      font-weight: 400;
+    }
+  }
+  
+  ion-button {
+    --padding-start: 4px;
+    --padding-end: 4px;
+    --padding-top: 4px;
+    --padding-bottom: 4px;
+    margin: 0;
+    --ripple-color: transparent;
+    --background-hover: transparent;
+    --background-focused: transparent;
+    --background-activated: transparent;
+    
+    ion-icon {
+      color: var(--ion-color-medium);
+      font-size: 1.5rem;
+      margin: 0;
+      transition: color 0.2s ease;
+    }
+    
+    &:hover, &:focus {
+      --background-hover: transparent;
+      
+      ion-icon {
+        color: var(--ion-color-primary);
+      }
+    }
+    
+    &.password-toggle {
+      --padding-start: 8px;
+      --padding-end: 8px;
+      margin-right: -4px;
+    }
+  }
+}
+
+/* Divider styling */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: var(--ion-color-medium);
+  font-size: 0.9rem;
+  
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--ion-color-light-shade);
+    margin: 0 12px;
+  }
+}
+
+/* Login link styling */
+.login-link {
+  color: var(--ion-color-medium);
+  font-size: 0.95rem;
+  margin: 2rem 0 1rem;
+  text-align: center;
+  
+  p {
+    margin: 0;
+  }
+  
+  .login-link-text {
+    color: var(--ion-color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    position: relative;
+    padding: 0 2px;
+    transition: color 0.2s ease;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 1.5px;
+      background-color: var(--ion-color-primary);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover {
+      color: var(--ion-color-primary-shade);
+      
+      &::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+  }
+}
+
+// Terms and conditions
+.terms-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --min-height: 24px;
+  margin: 1.2rem 0 0.5rem;
+  
+  ion-checkbox {
+    --size: 20px;
+    --border-radius: 5px;
+    --border-width: 2px;
+    --border-color: var(--ion-color-medium);
+    --background-checked: var(--ion-color-primary);
+    --border-color-checked: var(--ion-color-primary);
+    --checkmark-color: white;
+    margin-right: 12px;
+  }
+  
+  ion-label {
+    font-size: 0.9rem;
+    color: var(--ion-color-medium);
+    line-height: 1.4;
+    
+    a {
+      color: var(--ion-color-primary);
+      font-weight: 500;
+      text-decoration: none;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+// Password strength meter
+.password-strength {
+  width: 100%;
+  height: 4px;
+  background: var(--ion-color-light-shade);
+  border-radius: 2px;
+  margin: 10px 0 0;
+  overflow: hidden;
+  
+  .strength-bar {
+    height: 100%;
+    width: 100%;
+    transition: width 0.3s ease;
+    
+    .strength-fill {
+      height: 100%;
+      transition: width 0.3s ease, background-color 0.3s ease;
+      
+      &.weak {
+        background-color: var(--ion-color-danger);
+        width: 33%;
+      }
+      
+      &.medium {
+        background-color: var(--ion-color-warning);
+        width: 66%;
+      }
+      
+      &.strong {
+        background-color: var(--ion-color-success);
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  ion-content {
+    --padding-start: 1.2rem;
+    --padding-end: 1.2rem;
+  }
+  
+  .register-container {
+    padding: 10px 0 30px;
+  }
+  
+  .logo-container {
+    margin-bottom: 2rem;
+    
+    .logo {
+      width: 90px;
+      height: 90px;
+      padding: 0.8rem;
+    }
+    
+    h1 {
+      font-size: 1.6rem;
+      margin: 0.6rem 0 0.3rem;
+    }
+    
+    p {
+      font-size: 0.95rem;
+    }
+  }
+  
+  .input-item {
+    --min-height: 52px;
+    
+    ion-icon {
+      font-size: 1.2rem !important;
+      margin-right: 10px !important;
+    }
+  }
+  
+  .register-button, .google-button {
+    height: 48px !important;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  :host {
+    --ion-background-color: var(--ion-color-dark);
+  }
+
+  ion-content {
+    --background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  }
+
+  form {
+    background: var(--ion-color-dark-tint);
+  }
+
+  .logo-container {
+    h1 {
+      color: #fff;
+    }
+
+    p {
+      color: #adb5bd;
+    }
+  }
+
+  ion-item {
+    --background: rgba(255, 255, 255, 0.05);
+  }
+}

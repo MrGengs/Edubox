@@ -1,0 +1,84 @@
+<div class="shape shape-1"></div>
+<div class="shape shape-2"></div>
+<div class="shape shape-3"></div>
+
+
+<ion-content [fullscreen]="true">
+  <div class="search-section">
+    <ion-searchbar 
+      class="custom-searchbar" 
+      placeholder="Cari modul, topik, atau materi..."
+      [(ngModel)]="searchTerm"
+      (ionInput)="filterModules()">
+    </ion-searchbar>
+    
+    <div class="filter-tags">
+      <ion-chip *ngFor="let filter of filters" 
+        [class.active]="filter.value === activeFilter" 
+        (click)="setActiveFilter(filter.value)">
+        <ion-label>{{ filter.icon }} {{ filter.label }}</ion-label>
+      </ion-chip>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <ion-card class="progress-overview">
+      <ion-card-content class="progress-stats">
+        <div *ngFor="let stat of progressStats" class="stat-item">
+          <div class="stat-number">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="learning-paths">
+      <h3 class="section-title">
+        <ion-icon name="trail-sign-outline"></ion-icon> Jalur Pembelajaran
+      </h3>
+      <div class="paths-grid">
+        <ion-card *ngFor="let path of learningPaths" class="path-card" button (click)="openPath(path)">
+          <div class="path-icon">{{ path.icon }}</div>
+          <ion-card-header>
+            <ion-card-title class="path-title">{{ path.title }}</ion-card-title>
+            <ion-card-subtitle class="path-desc">{{ path.desc }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content class="path-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" [style.width.%]="path.progress"></div>
+            </div>
+            <span>{{ path.progress }}%</span>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <div class="modules-section">
+      <h3 class="section-title">
+        <ion-icon name="book-outline"></ion-icon> Modul Tersedia
+      </h3>
+      <ion-card *ngFor="let module of filteredModules" class="module-item" button (click)="openModule(module)">
+        <div class="module-header">
+          <div class="module-icon">{{ module.icon }}</div>
+          <div class="module-info">
+            <ion-card-title class="module-title">{{ module.title }}</ion-card-title>
+            <div class="module-meta">
+              <span><ion-icon name="time-outline"></ion-icon> {{ module.duration }}</span>
+              <span><ion-icon name="barbell-outline"></ion-icon> {{ module.exercises }}</span>
+              <span><ion-icon name="star-outline"></ion-icon> {{ module.rating }}</span>
+            </div>
+          </div>
+          <ion-chip class="module-status" [ngClass]="module.status.toLowerCase()">{{ module.status }}</ion-chip>
+        </div>
+        <ion-card-content class="module-desc">{{ module.desc }}</ion-card-content>
+        <div class="module-tags">
+          <ion-chip *ngFor="let tag of module.tags" class="module-tag">{{ tag }}</ion-chip>
+        </div>
+      </ion-card>
+    </div>
+  </div>
+  
+
+</ion-content>
+
+<!-- Bottom Navigation -->
+<app-bottom-nav></app-bottom-nav>

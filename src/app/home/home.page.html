@@ -1,0 +1,175 @@
+<ion-content
+  [fullscreen]="true"
+  class="ion-padding"
+  [class.loading]="!isLoaded"
+>
+  <!-- Animated Background -->
+  <div class="bg-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container" [class.loading]="!isLoaded">
+    <!-- Header with Glassmorphism Effect -->
+    <div class="header glassmorphism">
+      <div class="user-profile">
+        <div class="avatar-container">
+          <div
+            class="avatar"
+            [class.has-image]="!!userPhotoUrl && !showInitials"
+          >
+            <img
+              *ngIf="userPhotoUrl && !showInitials"
+              [src]="userPhotoUrl"
+              alt="Profile"
+              (load)="onImageLoad()"
+              (error)="onImageError($event)"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <span *ngIf="!userPhotoUrl || showInitials" class="initials"
+              >{{userInitials}}</span
+            >
+          </div>
+          <div class="debug-info" *ngIf="debugMode">
+            <div>Has Image: {{!!userPhotoUrl && !showInitials}}</div>
+            <div>Show Initials: {{showInitials}}</div>
+          </div>
+        </div>
+        <div class="user-info">
+          <h3>{{userName}}</h3>
+          <p>{{userRole}} • Level {{userLevel}}</p>
+        </div>
+        <button
+          class="notification-btn"
+          (click)="toggleNotifications()"
+          (mousedown)="createRipple($event)"
+        >
+          <span class="notification-badge">3</span>
+          <span class="icon">🔔</span>
+          <span class="ripple"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Carousel -->
+      <div class="carousel-container">
+        <div
+          class="carousel"
+          #carousel
+          (mouseenter)="stopCarousel()"
+          (mouseleave)="startCarousel()"
+          (touchstart)="onTouchStart($event)"
+          (touchmove)="onTouchMove($event)"
+          (touchend)="onTouchEnd($event)"
+        >
+          <ng-container *ngFor="let item of carouselItems; let i = index">
+            <div
+              class="carousel-item"
+              [class.active]="currentSlide === i"
+              (click)="onNavigate(item.link)"
+              [attr.data-index]="i"
+            >
+              <div class="carousel-icon">{{ item.icon }}</div>
+              <h3 class="carousel-title">{{ item.title }}</h3>
+              <p class="carousel-description">{{ item.description }}</p>
+            </div>
+          </ng-container>
+        </div>
+        <div class="carousel-nav">
+          <button
+            *ngFor="let _ of carouselItems; let i = index"
+            [class.active]="currentSlide === i"
+            (click)="goToSlide(i)"
+            (keyup.enter)="goToSlide(i)"
+            [attr.aria-label]="'Go to slide ' + (i + 1)"
+          ></button>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="carousel-dots">
+          <div
+            *ngFor="let item of carouselItems; let i = index"
+            class="dot"
+            [class.active]="currentSlide === i"
+            (click)="goToSlide(i)"
+          ></div>
+        </div>
+      </div>
+      <!-- Close carousel-container -->
+
+      <!-- Feature Shortcuts -->
+      <div class="feature-shortcuts">
+        <h3 class="section-title">🎯 Fitur Unggulan</h3>
+        <div class="shortcuts-grid">
+          <div
+            class="shortcut-card"
+            *ngFor="let feature of features"
+            (click)="onNavigate(feature.link)"
+          >
+            <div class="shortcut-icon">{{feature.icon}}</div>
+            <h4>{{feature.title}}</h4>
+            <p>{{feature.description}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Section -->
+      <div class="news-section">
+        <h3 class="section-title">📰 Berita Terbaru</h3>
+        <div class="news-list">
+          <div class="news-item" *ngFor="let news of newsItems">
+            <div class="news-header">
+              <div class="news-icon">{{news.icon}}</div>
+              <h5>{{news.title}}</h5>
+              <span class="news-time">{{news.time}}</span>
+            </div>
+            <p>{{news.description}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Forum Section -->
+      <div class="forum-section">
+        <h3 class="section-title">💬 Forum Diskusi</h3>
+        <div
+          class="forum-item"
+          *ngFor="let thread of forumThreads"
+          (click)="openThread(thread.id)"
+        >
+          <div class="forum-header">
+            <div
+              class="forum-avatar"
+              [style.background]="thread.avatarGradient"
+            >
+              {{thread.userInitials}}
+            </div>
+            <div class="forum-user">
+              <h6>{{thread.userName}}</h6>
+              <span>{{thread.timeAgo}}</span>
+            </div>
+            <div class="forum-stats">
+              <span>👍 {{thread.likes}}</span>
+              <span>💬 {{thread.replies}}</span>
+            </div>
+          </div>
+          <h5>{{thread.title}}</h5>
+          <p>{{thread.preview}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fixed Bottom Container -->
+  <div class="fixed-bottom-container">
+    <!-- Bottom Navigation -->
+    <app-bottom-nav (navigate)="onNavigate($event)"></app-bottom-nav>
+  </div>
+</ion-content>

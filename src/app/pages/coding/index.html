@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LED Cube Controller</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #eee;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 { color: #0ff; }
+    button {
+      margin: 5px;
+      padding: 10px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #222;
+      color: #0ff;
+      transition: 0.2s;
+    }
+    button:hover { background: #0ff; color: #111; }
+    #matrix {
+      display: grid;
+      grid-template-columns: repeat(4, 40px);
+      grid-gap: 5px;
+      margin: 20px auto;
+      width: max-content;
+    }
+    .cell {
+      width: 40px; height: 40px;
+      background: #333;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .cell.on { background: #0f0; }
+    textarea {
+      width: 90%; height: 150px;
+      margin: 10px 0;
+      border-radius: 8px;
+      padding: 10px;
+      background: #222;
+      color: #0ff;
+      font-family: monospace;
+    }
+    .template {
+      border: 1px solid #0ff;
+      border-radius: 10px;
+      padding: 10px;
+      margin: 15px auto;
+      max-width: 600px;
+      background: #1a1a1a;
+    }
+  </style>
+</head>
+<body>
+  <h1>LED Cube 4x4x4 Controller</h1>
+
+  <div>
+    <button id="connectBtn">🔌 Connect</button>
+    <button id="disconnectBtn">❌ Disconnect</button>
+  </div>
+
+  <h2>🎬 Animasi</h2>
+  <div>
+    <button onclick="sendAnim(1)">Play Animasi 1</button>
+    <button onclick="sendAnim(2)">Play Animasi 2</button>
+    <button onclick="sendAnim(3)">Play Animasi 3</button>
+    <button onclick="sendAnim(4)">Play Animasi 4</button>
+    <button onclick="sendAnim(5)">Play Animasi 5</button>
+  </div>
+
+  <h2>📜 Template Code Arduino</h2>
+  <div id="templates"></div>
+
+  <h2>🎨 Matrix Editor (4x4)</h2>
+  <div id="matrix"></div>
+  <button onclick="exportMatrix()">Export JSON</button>
+  <div><textarea id="matrixJson" readonly></textarea></div>
+
+  <script>
+    let port, writer;
+    const matrixDiv = document.getElementById("matrix");
+    const matrix = [];
+
+    // Animasi template list
+    const templates = {
+      "Animasi 1": `void anim1() {
+  for (int i=0; i<4; i++) {
+    digitalWrite(layerPins[i], HIGH);
+    delay(200);
+    digitalWrite(layerPins[i], LOW);
+  }
+}`,
+      "Animasi 2": `void anim2() {
+  for (int i=0; i<16; i++) {
+    digitalWrite(ledPins[i], HIGH);
+    delay(100);
+    digitalWrite(ledPins[i], LOW);
+  }
+}`,
+      "Animasi 3": `void anim3() {
+  for (int i=0; i<4; i++) {
+    digitalWrite(layerPins[i], HIGH);
+    for (int j=0; j<16; j++) digitalWrite(ledPins[j], HIGH);
+    delay(200);
+    for (int j=0; j<16; j++) digitalWrite(ledPins[j], LOW);
+    digitalWrite(layerPins[i], LOW);
+  }
+}`,
+      "Animasi 4": `void anim4() {
+  for (int j=0; j<16; j++) {
+    digitalWrite(ledPins[j], HIGH);
+  }
+  delay(500);
+  for (int j=0; j<16; j++) {
+    digitalWrite(ledPins[j], LOW);
+  }
+}`,
+      "Animasi 5": `void anim5() {
+  for (int l=0; l<4; l++) {
+    digitalWrite(layerPins[l], HIGH);
+    delay(100);
+    digitalWrite(layerPins[l], LOW);
+  }
+}`
+    };
+
+    // Tampilkan template di halaman
+    const templateDiv = document.getElementById("templates");
+    Object.entries(templates).forEach(([name, code], idx) => {
+      const box = document.createElement("div");
+      box.className = "template";
+      box.innerHTML = `<h3>${name}</h3>
+        <textarea readonly>${code}</textarea><br>
+        <button onclick="sendAnim(${idx+1})">▶️ Play ${name}</button>`;
+      templateDiv.appendChild(box);
+    });
+
+    // Buat editor 4x4
+    for (let i = 0; i < 16; i++) {
+      const cell = document.createElement("div");
+      cell.className = "cell";
+      cell.onclick = () => {
+        cell.classList.toggle("on");
+        matrix[i] = cell.classList.contains("on") ? 1 : 0;
+      };
+      matrix.push(0);
+      matrixDiv.appendChild(cell);
+    }
+
+    async function connect() {
+      try {
+        port = await navigator.serial.requestPort();
+        await port.open({ baudRate: 115200 });
+        writer = port.writable.getWriter();
+        log("Connected to Arduino ✅");
+      } catch (e) {
+        log("Connection failed ❌: " + e);
+      }
+    }
+
+    async function disconnect() {
+      if (writer) { writer.releaseLock(); writer = null; }
+      if (port) { await port.close(); port = null; }
+      log("Disconnected ❌");
+    }
+
+    async function sendAnim(n) {
+      if (!writer) { log("Not connected!"); return; }
+      const cmd = "ANIM" + n + "\n";
+      await writer.write(new TextEncoder().encode(cmd));
+      log("Sent: " + cmd.trim());
+    }
+
+    function exportMatrix() {
+      const json = JSON.stringify(matrix);
+      document.getElementById("matrixJson").value = json;
+    }
+
+    function log(msg) { console.log(msg); }
+
+    document.getElementById("connectBtn").onclick = connect;
+    document.getElementById("disconnectBtn").onclick = disconnect;
+  </script>
+</body>
+</html>

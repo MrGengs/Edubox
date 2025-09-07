@@ -1,0 +1,144 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Hide browser's built-in password reveal button */
+input[type="password"] {
+  &::-ms-reveal,
+  &::-ms-clear,
+  &::-webkit-contacts-auto-fill-button,
+  &::-webkit-credentials-auto-fill-button,
+  &::-webkit-textfield-decoration-container,
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button,
+  &::-webkit-search-cancel-button,
+  &::-webkit-search-results-button,
+  &::-webkit-search-decoration,
+  &::-webkit-password-strength,
+  &::-webkit-password-reveal,
+  &::-webkit-credentials-auto-fill-button,
+  &::-webkit-credentials-autofill-button,
+  &::-webkit-caps-lock-indicator,
+  &::-webkit-credentials-auto-fill-indicator,
+  &::-webkit-credentials-autofill-indicator {
+    display: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    right: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+}
+
+/* Styling untuk input password */
+input[type="password"] {
+  -webkit-text-security: disc; /* Untuk Chrome, Safari, dan Edge versi baru */
+  -moz-text-security: disc;    /* Untuk Firefox */
+}
+
+/* For Edge and IE */
+input[type="password"]::-ms-reveal {
+  display: none !important;
+  width: 0;
+  height: 0;
+}
+
+/* For Chrome, Safari, and Opera */
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button:hover,
+input[type="password"]::-webkit-credentials-auto-fill-button:active,
+input[type="password"]::-webkit-credentials-auto-fill-button:focus {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  right: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  border: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+}
+
+/* Global Scrollbar Styles - Hide scrollbar but keep functionality */
+ion-content {
+  /* Hide scrollbar for all browsers */
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    display: none !important;
+  }
+  
+  /* For IE, Edge and Firefox */
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: -ms-autohiding-scrollbar !important;
+  overflow: -moz-scrollbars-none !important;
+  
+  /* Force hide scrollbar in all cases */
+  scrollbar-color: transparent transparent !important;
+  scrollbar-gutter: stable !important;
+  
+  /* Smooth scrolling for iOS devices */
+  -webkit-overflow-scrolling: touch;
+  
+  .inner-scroll {
+    /* Hide scrollbar for all browsers */
+    &::-webkit-scrollbar {
+      display: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+    
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+}
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import "@ionic/angular/css/display.css";
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+
+
+/**
+ * Ionic Dark Mode
+ * -----------------------------------------------------
+ * For more info, please see:
+ * https://ionicframework.com/docs/theming/dark-mode
+ */
+
+/* @import "@ionic/angular/css/palettes/dark.always.css"; */
+/* @import "@ionic/angular/css/palettes/dark.class.css"; */
+@import "@ionic/angular/css/palettes/dark.system.css";

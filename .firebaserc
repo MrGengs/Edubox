@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "edubox-48c54"
+  },
+  "targets": {
+    "edubox-48c54": {
+      "hosting": {
+        "edubox": [
+          "edubox-48c54"
+        ]
+      }
+    }
+  }
+}

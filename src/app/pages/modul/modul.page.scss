@@ -1,0 +1,311 @@
+/* Global Styles & Background */
+:host {
+  --ion-background-color: transparent;
+}
+
+ion-content {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  position: relative;
+}
+
+.shape {
+  position: fixed;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(10px);
+  z-index: 0;
+}
+.shape-1 { width: 200px; height: 200px; top: 10%; right: -100px; animation: drift 15s ease-in-out infinite; }
+.shape-2 { width: 150px; height: 150px; bottom: 20%; left: -75px; animation: drift 20s ease-in-out infinite reverse; }
+.shape-3 { width: 100px; height: 100px; top: 50%; left: 50%; transform: translate(-50%, -50%); animation: pulse 10s ease-in-out infinite; }
+
+/* Header */
+.header-toolbar {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --color: white;
+  padding: 10px 0;
+
+  ion-title {
+    h2 { font-size: 22px; margin-bottom: 5px; font-weight: 600; }
+    p { font-size: 14px; opacity: 0.9; }
+  }
+  .glass-btn {
+    --background: rgba(255,255,255,0.2);
+    --border-radius: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .progress-indicator {
+    background: rgba(255,255,255,0.25);
+    padding: 8px 14px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* Search Section */
+.search-section {
+  padding: 20px 15px;
+  background: linear-gradient(180deg, rgba(248,249,250,1) 0%, rgba(233,236,239,1) 100%);
+
+  .custom-searchbar {
+    --box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    --border-radius: 25px;
+    --background: rgba(255,255,255,0.9);
+    padding: 0;
+  }
+
+  .filter-tags {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 15px 5px 20px 5px;
+    margin: 0 -5px;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    
+    &::-webkit-scrollbar { 
+      display: none;
+    }
+    
+    ion-chip {
+      flex: 0 0 auto;
+      margin: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      
+      ion-label {
+        white-space: nowrap;
+        font-size: 13px;
+        padding: 0 8px;
+      }
+    }
+  }
+
+  ion-chip {
+    background: rgba(255,255,255,0.9);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    &.active {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* Main Content Area */
+.main-content {
+  padding: 0 15px;
+  background: white;
+  padding-bottom: 120px;
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  margin-top: 30px;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Progress Overview Card */
+ion-card.progress-overview {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  margin: 20px 0 30px 0;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  .progress-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: center;
+    .stat-number { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+    .stat-label { font-size: 13px; opacity: 0.9; }
+  }
+}
+
+/* Learning Paths */
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 18px;
+}
+ion-card.path-card {
+  --background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  transition: all 0.4s ease;
+  border: 2px solid transparent;
+  padding: 10px;
+  margin: 0;
+
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+  }
+  .path-icon { font-size: 40px; margin-bottom: 10px; display: block; }
+  .path-title { font-size: 16px; font-weight: 600; color: #2c3e50; }
+  .path-desc { font-size: 12px; color: #7f8c8d; }
+  .path-progress {
+    display: flex; align-items: center; gap: 12px; font-size: 12px; color: #95a5a6; font-weight: 600;
+  }
+  .progress-bar {
+    flex: 1; height: 6px; background: #ecf0f1; border-radius: 3px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #667eea, #764ba2);
+  }
+}
+
+/* Module Items */
+.preview-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin: 16px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: white;
+    display: block;
+  }
+
+  .preview-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+    color: #6c757d;
+    text-align: center;
+    padding: 20px;
+    z-index: 1;
+
+    ion-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: #a0aec0;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      max-width: 80%;
+    }
+  }
+
+  .preview-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #6c757d;
+    text-align: center;
+    padding: 20px;
+
+    .preview-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+      color: #adb5bd;
+    }
+
+    h3 {
+      margin: 8px 0 4px;
+      color: #495057;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      font-size: 14px;
+      opacity: 0.8;
+    }
+  }
+}
+
+ion-card.module-item {
+  --background: white;
+  border-radius: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: all 0.4s ease;
+  border-left: 5px solid transparent;
+  padding: 15px;
+  margin: 0 0 18px 0;
+
+  &:hover {
+    transform: translateX(8px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.15);
+    border-left-color: #667eea;
+  }
+  .module-header { display: flex; align-items: center; gap: 18px; margin-bottom: 15px; }
+  .module-icon {
+    width: 55px; height: 55px; border-radius: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; color: white; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+  .module-info { flex: 1; }
+  .module-title { font-size: 17px; font-weight: 600; color: #2c3e50; margin-bottom: 8px; }
+  .module-meta { display: flex; gap: 15px; font-size: 13px; color: #7f8c8d; align-items: center; }
+  .module-status {
+    &.selesai { --background: linear-gradient(135deg, #27ae60, #2ecc71); --color: white; }
+    &.berlangsung { --background: linear-gradient(135deg, #667eea, #764ba2); --color: white; }
+    &.terkunci { --background: linear-gradient(135deg, #95a5a6, #bdc3c7); --color: white; }
+    &.tersedia { --background: linear-gradient(135deg, #f39c12, #f1c40f); --color: white; }
+  }
+  .module-desc { color: #7f8c8d; font-size: 14px; line-height: 1.6; margin-bottom: 18px; }
+  .module-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+  .module-tag {
+    background: rgba(102, 126, 234, 0.1); color: #667eea; font-size: 11px;
+    --border-radius: 15px; --padding-start: 14px; --padding-end: 14px;
+  }
+}
+
+/* AI Helper FAB */
+ion-fab-button.ai-helper {
+  --background: linear-gradient(135deg, #667eea, #764ba2);
+  --box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  animation: pulse-ai 3s infinite;
+}
+
+/* Animations */
+@keyframes drift { /* ... same as original ... */ }
+@keyframes pulse { /* ... same as original ... */ }
+@keyframes bounce { /* ... same as original ... */ }
+@keyframes fadeInUp { /* ... same as original ... */ }
+@keyframes rotate { /* ... same as original ... */ }
+@keyframes pulse-ai { /* ... same as original ... */ }

@@ -1,0 +1,2394 @@
+/* Global Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+/* Avatar Container */
+.avatar-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 16px;
+
+  .avatar {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 3px solid #2c3e50;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 1px 3px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      border-color: #3498db;
+      transform: scale(1.02);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    &.has-image {
+      background: transparent;
+      padding: 0;
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        border-radius: 50%;
+        border: none;
+      }
+    }
+
+    .initials {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .debug-info {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 10px;
+    padding: 4px;
+    border-radius: 4px;
+    margin-top: 8px;
+    white-space: nowrap;
+    text-align: center;
+    z-index: 1000;
+    display: none; /* Hide by default, show only when needed */
+    pointer-events: none;
+  }
+
+  &:hover .debug-info {
+    display: block;
+  }
+}
+
+/* User Profile Section */
+.user-profile {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding: 0.5rem;
+
+  .avatar {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 2px solid #2c3e50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Avatar image styles */
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 50%;
+      transition: opacity 0.3s ease;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+      will-change: transform, opacity;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  .initials {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    color: #555;
+    font-weight: 600;
+    font-size: 1.25rem;
+    border-radius: 50%;
+  }
+
+  .debug-info {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    font-size: 8px;
+    padding: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.user-info {
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ion-text-color, #000);
+  }
+
+  p {
+    margin: 2px 0 0;
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+/* Animation Keyframes */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-15px) rotate(180deg);
+  }
+}
+
+@keyframes pulse-avatar {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Glassmorphism effect */
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Ripple effect */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.7);
+  transform: scale(0);
+  animation: ripple 0.6s linear;
+  pointer-events: none;
+  opacity: 1;
+}
+
+:root {
+  /* Color Palette */
+  --color-primary: #667eea;
+  --color-primary-light: #818cf8;
+  --color-primary-dark: #764ba2;
+  --color-secondary: #f5576c;
+  --color-accent: #4facfe;
+  --color-success: #43e97b;
+  --color-warning: #f59e0b;
+  --color-text: #1e293b;
+  --color-text-light: #64748b;
+  --color-bg: #f8fafc;
+  --color-card: rgba(255, 255, 255, 0.95);
+  --color-border: rgba(226, 232, 240, 0.3);
+  --color-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --color-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --gradient-primary: linear-gradient(135deg, #667eea, #764ba2);
+  --gradient-accent: linear-gradient(135deg, #4facfe, #00f2fe);
+  --gradient-warning: linear-gradient(135deg, #f093fb, #f5576c);
+  --gradient-success: linear-gradient(135deg, #43e97b, #38f9d7);
+  --gradient-shine: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  --color-blue: #00f2fe;
+
+  /* Spacing */
+  --spacing-xxs: 0.25rem;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing: 1rem;
+  --spacing-md: 1.25rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Border Radius */
+  --radius-sm: 0.5rem;
+  --radius: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 50%;
+
+  /* Transitions */
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index */
+  --z-header: 100;
+  --z-ai: 1000;
+  --z-nav: 900;
+  --z-modal: 2000;
+
+  /* Animation */
+  --animation-duration: 0.3s;
+  --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Shadows */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 35px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 15px 40px rgba(0, 0, 0, 0.15);
+  --shadow-2xl: 0 20px 50px rgba(0, 0, 0, 0.2);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --shadow-outline: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+/* ==========================================================================
+   #BASE STYLES
+   ========================================================================== */
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Feature Shortcuts */
+.feature-shortcuts {
+  padding: 0 10px;
+  margin: 24px auto 32px;
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+
+  .section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0 0 30px;
+    color: var(--color-text);
+    text-align: center;
+    width: 100%;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 28px;
+    position: relative;
+    background: white;
+    border-radius: 50px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    height: auto;
+    min-height: 44px;
+    width: auto;
+    max-width: 90%;
+    text-align: center;
+    white-space: nowrap;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-border));
+      opacity: 0.7;
+    }
+
+    &::before {
+      left: -30px;
+    }
+
+    &::after {
+      right: -30px;
+      transform: translateY(-50%) rotate(180deg);
+    }
+  }
+
+  .shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    justify-content: center;
+    align-items: stretch;
+    gap: 16px;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 16px;
+    box-sizing: border-box;
+
+    @media (min-width: 400px) {
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 20px;
+      padding: 0 16px;
+    }
+
+    .shortcut-card {
+      width: 100%;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 160px;
+      padding: 20px 10px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+
+      &:active {
+        transform: scale(0.98);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    .shortcut-icon {
+      font-size: 2.2rem;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-primary);
+      height: 60px;
+      width: 60px;
+      line-height: 1;
+      border-radius: 18px;
+      background: rgba(var(--color-primary-rgb), 0.08);
+      transition: all 0.3s ease;
+    }
+
+    h4 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      font-weight: 700;
+      line-height: 1.3;
+      width: 100%;
+    }
+
+    p {
+      font-size: 0.8rem;
+      color: var(--color-text-light);
+      margin: 0;
+      line-height: 1.4;
+      width: 100%;
+      padding: 0 4px;
+    }
+  }
+}
+
+/* Section Title */
+.section-title {
+  font-size: 1.1rem;
+  margin: 0 0 15px 0;
+  padding: 0 20px;
+  color: var(--color-text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+    margin-left: 10px;
+  }
+}
+
+/* Container & Layout */
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  background: var(--color-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-md);
+  overflow-x: hidden;
+
+  &.loading {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Header */
+.header {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(248, 250, 252, 0.9)
+  );
+  padding: 25px 20px;
+  position: relative;
+  z-index: var(--z-header);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      transparent,
+      rgba(102, 126, 234, 0.05),
+      transparent
+    );
+    animation: shimmer 3s infinite;
+    z-index: -1;
+  }
+
+  &.loading {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  z-index: 2;
+}
+
+.avatar {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  animation: pulse-avatar 2s infinite;
+  flex-shrink: 0;
+}
+
+@keyframes pulse-avatar {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin: 0 0 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--color-text-light);
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.notification-btn {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--color-border);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-text-light);
+  font-size: 1.25rem;
+
+  &:hover {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--gradient-warning);
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: bold;
+    animation: bounce 2s infinite;
+    border: 2px solid white;
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Main Content */
+.main-content {
+  padding: 25px 20px 120px;
+  z-index: 1;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  margin: 0 0 20px 0;
+  padding: 0 20px;
+  color: var(--color-text);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+    margin-left: 10px;
+  }
+}
+
+/* ... */
+
+.news-section,
+.forum-section {
+  margin: 30px 0;
+  padding: 0 20px;
+
+  .news-list,
+  .forum-item {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .news-item {
+    padding: 15px 0;
+    border-bottom: 1px solid var(--color-border);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .news-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+
+      .news-icon {
+        font-size: 1.2rem;
+      }
+
+      h5 {
+        margin: 0;
+        font-size: 0.95rem;
+        color: var(--color-text);
+      }
+
+      .news-time {
+        margin-left: auto;
+        font-size: 0.8rem;
+        color: var(--color-text-light);
+      }
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+      line-height: 1.5;
+    }
+  }
+
+  .forum-item {
+    padding: 15px;
+    margin-bottom: 15px;
+
+    .forum-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+
+      .forum-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 0.9rem;
+      }
+
+      .forum-user {
+        flex: 1;
+
+        h6 {
+          margin: 0;
+          font-size: 0.9rem;
+          color: var(--color-text);
+        }
+
+        span {
+          font-size: 0.75rem;
+          color: var(--color-text-light);
+        }
+      }
+
+      .forum-stats {
+        display: flex;
+        gap: 15px;
+
+        span {
+          font-size: 0.8rem;
+          color: var(--color-text-light);
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+      }
+    }
+
+    h5 {
+      margin: 10px 0 8px;
+      font-size: 1rem;
+      color: var(--color-text);
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--color-text-light);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      line-clamp: 2;
+      max-height: 3.2em; /* Fallback untuk browser yang tidak mendukung line-clamp */
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+/* ... */
+
+.forum-section {
+  padding: 0 20px;
+  margin-bottom: 35px;
+  animation: fadeInUp 1.2s ease-out;
+}
+
+.forum-item {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-border);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.forum-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.forum-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  flex-shrink: 0;
+}
+
+.forum-item:nth-child(2) .forum-avatar {
+  background: var(--gradient-warning);
+  box-shadow: 0 4px 12px rgba(240, 147, 251, 0.3);
+}
+
+.forum-user {
+  flex: 1;
+  min-width: 0;
+
+  h6 {
+    font-size: 15px;
+    color: var(--color-text);
+    margin-bottom: 3px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  span {
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+}
+
+.forum-stats {
+  display: flex;
+  gap: 15px;
+  font-size: 12px;
+  color: var(--color-text-light);
+  font-weight: 500;
+  margin-top: 10px;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+}
+
+.forum-item h5 {
+  font-size: 16px;
+  color: var(--color-text);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.forum-item p {
+  font-size: 14px;
+  color: var(--color-text-light);
+  line-height: 1.6;
+  font-weight: 500;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-clamp: 2;
+  max-height: 3.2em; /* Fallback untuk browser yang tidak mendukung line-clamp */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.carousel-nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+  z-index: 10;
+
+  button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    appearance: none;
+
+    /* Pulsing dot effect */
+    &::before {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: all 0.3s ease;
+      border: 2px solid var(--ion-color-primary);
+    }
+
+    /* Active state */
+    &.active {
+      background: var(--ion-color-primary);
+      transform: scale(1.2);
+
+      &::before {
+        opacity: 0.5;
+        transform: scale(1.2);
+      }
+    }
+
+    /* Focus state for accessibility */
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+/* Carousel Item */
+.carousel-item {
+  flex: 0 0 100%;
+  padding: 40px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
+  box-sizing: border-box;
+}
+
+/* Main Content */
+.main-content {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 200px);
+  position: relative;
+
+  &.active {
+    color: var(--color-primary);
+    background: rgba(102, 126, 234, 0.1);
+  }
+
+  &:hover {
+    color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+}
+
+.nav-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .nav-icon {
+  transform: scale(1.1);
+}
+
+.nav-label {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   #LOADING ANIMATION
+   ========================================================================== */
+
+.loading {
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Main content padding to prevent content from being hidden behind fixed elements */
+.main-content {
+  scroll-behavior: smooth; /* Smooth scroll */
+  scroll-snap-type: none; /* Menonaktifkan snap scroll */
+  padding-bottom: 180px; /* Adjust this value based on the total height of your fixed bottom elements */
+}
+
+/* Ionic Overrides */
+/* Hide scrollbar but keep functionality */
+ion-content {
+  --background: transparent;
+  --padding-top: 0;
+  --padding-bottom: 80px; /* Add padding to prevent content from being hidden behind the fixed bottom nav */
+  --padding-start: 0;
+
+  /* Hide scrollbar for all browsers */
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    display: none !important;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: -ms-autohiding-scrollbar !important; /* IE11+ */
+  overflow: -moz-scrollbars-none !important; /* Older Firefox */
+
+  /* Force hide scrollbar in all cases */
+  scrollbar-color: transparent transparent !important;
+  scrollbar-gutter: stable !important;
+  --padding-end: 0;
+  --color: var(--color-text);
+  --background: transparent;
+  --keyboard-offset: 0px;
+  --offset-top: 0px;
+  --offset-bottom: 0px;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-bottom: 80px; /* Space for bottom nav */
+
+  /* Smooth scrolling for iOS devices */
+  -webkit-overflow-scrolling: touch;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  /* Content styles */
+  .inner-scroll {
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+
+    /* Ensure scroll works */
+    overflow-y: auto !important;
+    overscroll-behavior: contain; /* Mencegah scroll chaining */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+
+    /* Hide scrollbar for all browsers */
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE and Edge */
+    scrollbar-color: transparent transparent !important;
+
+    /* For WebKit browsers */
+    &::-webkit-scrollbar {
+      width: 0 !important;
+      height: 0 !important;
+      background: transparent !important;
+      display: none !important;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: transparent !important;
+      display: none !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent !important;
+      display: none !important;
+    }
+    --color: var(--color-text);
+    --background: transparent;
+    --keyboard-offset: 0px;
+    --offset-top: 0px;
+    --offset-bottom: 0px;
+    background: transparent;
+    color: var(--color-text);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+
+    /* Smooth scrolling for iOS devices */
+    -webkit-overflow-scrolling: touch;
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    /* Content styles */
+    .inner-scroll {
+      background: transparent;
+      padding-bottom: 80px; /* Space for bottom navigation */
+    }
+
+    /* Header styles */
+    ion-header {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      --background: transparent;
+      --border-color: transparent;
+
+      ion-toolbar {
+        --background: transparent;
+        --border-color: transparent;
+        --color: var(--color-text);
+        padding: 10px 16px;
+
+        ion-title {
+          font-weight: 600;
+          font-size: 1.4rem;
+          padding: 0;
+        }
+
+        ion-buttons {
+          ion-button {
+            --padding-start: 8px;
+            --padding-end: 8px;
+            --ripple-color: var(--color-primary);
+
+            ion-icon {
+              font-size: 1.5rem;
+            }
+          }
+        }
+      }
+    }
+
+    /* Card styles */
+    ion-card {
+      margin: 16px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      ion-card-header {
+        padding: 16px 16px 8px;
+
+        ion-card-title {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--color-text);
+        }
+
+        ion-card-subtitle {
+          color: var(--color-text-light);
+          font-size: 0.85rem;
+        }
+      }
+
+      ion-card-content {
+        padding: 8px 16px 16px;
+        color: var(--color-text-light);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
+    }
+
+    /* Button styles */
+    ion-button {
+      --border-radius: 12px;
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      --padding-start: 24px;
+      --padding-end: 24px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0.5px;
+      --box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      --transition: all 0.3s ease;
+
+      &.button-block {
+        margin-top: 24px;
+      }
+
+      &:active {
+        transform: translateY(1px);
+        --box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      }
+    }
+
+    /* List styles */
+    ion-list {
+      background: transparent;
+      padding: 8px 0;
+
+      ion-item {
+        --background: rgba(255, 255, 255, 0.8);
+        --border-radius: 12px;
+        --padding-start: 16px;
+        --padding-end: 16px;
+        --inner-padding-end: 8px;
+        margin-bottom: 12px;
+        --transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+
+        &:active {
+          transform: translateX(4px);
+        }
+
+        ion-icon {
+          color: var(--color-primary);
+          font-size: 1.4rem;
+          margin-right: 12px;
+        }
+
+        ion-label {
+          h2 {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--color-text);
+          }
+
+          p {
+            color: var(--color-text-light);
+            font-size: 0.85rem;
+          }
+        }
+
+        ion-badge {
+          --padding-start: 8px;
+          --padding-end: 8px;
+          --background: var(--color-primary);
+          --color: white;
+          font-weight: 600;
+          border-radius: 12px;
+        }
+      }
+    }
+
+    /* Segment styles */
+    ion-segment {
+      --background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 4px;
+      margin: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+
+      ion-segment-button {
+        --color: var(--color-text-light);
+        --color-checked: var(--color-primary);
+        --indicator-color: transparent;
+        --border-radius: 8px;
+        font-weight: 500;
+        --padding-top: 10px;
+        --padding-bottom: 10px;
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 0;
+          height: 3px;
+          background: var(--color-primary);
+          transition: width 0.3s ease;
+        }
+
+        &.segment-button-checked {
+          background: rgba(102, 126, 234, 0.1);
+          color: var(--color-primary);
+          font-weight: 600;
+
+          &::after {
+            width: 40%;
+          }
+        }
+      }
+    }
+
+    /* Loading spinner */
+    ion-spinner {
+      --color: var(--color-primary);
+      width: 32px;
+      height: 32px;
+    }
+
+    /* Custom animations */
+    .fade-in {
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .delay-1 {
+      animation-delay: 0.1s;
+    }
+    .delay-2 {
+      animation-delay: 0.2s;
+    }
+    .delay-3 {
+      animation-delay: 0.3s;
+    }
+    .delay-4 {
+      animation-delay: 0.4s;
+    }
+    .delay-5 {
+      animation-delay: 0.5s;
+    }
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* ==========================================================================
+   #CAROUSEL COMPONENT
+   ========================================================================== */
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    padding: 0 1rem;
+    perspective: 1000px; /* Add 3D perspective */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+
+  .carousel {
+    display: flex;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .carousel-item {
+    flex: 0 0 calc(100% - 2.5rem);
+    scroll-snap-align: start;
+    background: var(--color-card);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--color-shadow);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.7;
+    transform: scale(0.95) translateZ(0);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+
+    &.active {
+      opacity: 1;
+      transform: scale(1) translateZ(0);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: scale(0.98) translateZ(0);
+    }
+  }
+
+  .carousel-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+
+    .carousel-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0.5rem 0;
+      color: var(--color-text);
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: var(--color-text-light);
+      margin: 0;
+      line-height: 1.5;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+  }
+
+  /* Carousel indicators */
+  .carousel-indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    gap: 0.5rem;
+
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--color-border);
+      transition: all 0.3s ease;
+      cursor: pointer;
+
+      &.active {
+        width: 24px;
+        border-radius: 4px;
+        background: var(--gradient-primary);
+      }
+    }
+  }
+
+  /* Touch and hover states */
+  @media (hover: hover) {
+    .carousel-item:not(.active):hover {
+      opacity: 0.9;
+      transform: scale(0.98);
+    }
+  }
+
+  /* Disable animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .carousel {
+      scroll-behavior: auto;
+    }
+
+    .carousel-item {
+      transition: none;
+    }
+  }
+
+  /**
+   * Carousel Container
+   * 1. Create a stacking context to contain all carousel elements
+   * 2. Add smooth scrolling for touch devices
+   */
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    margin: var(--spacing-lg) 0;
+    overflow: visible;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: auto;
+    padding: 8px 0;
+    background: transparent;
+  }
+
+  /**
+   * Carousel Track
+   * 1. Enable smooth scrolling for touch devices
+   * 2. Hide scrollbar while allowing scrolling
+   */
+  .carousel {
+    display: flex;
+    width: 100%;
+    transition: transform 0.5s ease-in-out;
+    will-change: transform;
+    overflow-x: auto;
+    scroll-snap-type: none;
+    scroll-behavior: auto;
+    -webkit-overflow-scrolling: auto;
+    padding: 8px 0;
+    margin: 0;
+    background: transparent;
+    overscroll-behavior: contain;
+    align-items: center;
+    min-height: 220px;
+    scroll-padding: 0 16px;
+
+    /* Add padding to ensure first and last items are centered */
+    &::before,
+    &::after {
+      content: "";
+      flex: 0 0 16px;
+    }
+
+    /* Hide scrollbar */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 0 0 16px;
+    }
+    /**
+   * Carousel Item
+   * 1. Ensure each item takes full width of container
+   * 2. Create a smooth transition effect between slides
+   * 3. Add a subtle scale effect on active state
+   */
+    .carousel-item {
+      flex: 0 0 calc(100% - 40px);
+      width: calc(100% - 40px);
+      min-width: calc(100% - 40px);
+      padding: 2.5rem 2rem;
+      margin: 0 20px;
+      box-sizing: border-box;
+      background: transparent;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      scroll-snap-align: none;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      border: none;
+      border-radius: 20px;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      cursor: pointer;
+
+      &.active {
+        transform: scale(1.02);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+      }
+      margin: 0 8px;
+      border: none;
+      min-height: 180px;
+
+      /* Different background for each item */
+      &:nth-child(1) {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+      }
+
+      &:nth-child(2) {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+      }
+
+      &:nth-child(3) {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+      }
+
+      /* Add some spacing between items */
+      &:not(:last-child) {
+        margin-right: 16px;
+      }
+
+      /* Add a subtle overlay for better text contrast */
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.3),
+          rgba(0, 0, 0, 0.1)
+        );
+        z-index: 1;
+        transition: opacity 0.3s ease;
+        border-radius: 16px;
+      }
+    }
+
+    @media (min-width: 576px) {
+      .carousel-item {
+        flex: 0 0 45%;
+        width: 45%;
+        min-width: 45%;
+        margin: 0 8px;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .carousel-item {
+        flex: 0 0 30%;
+        width: 30%;
+        min-width: 30%;
+        margin: 0 8px;
+      }
+    }
+
+    /* Carousel content */
+    .carousel-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 16px;
+      text-align: center;
+
+      .carousel-icon {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+      }
+
+      h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 8px 0;
+        line-height: 1.3;
+      }
+
+      p {
+        font-size: 0.9rem;
+        margin: 0 0 12px;
+        opacity: 0.9;
+        line-height: 1.4;
+        max-width: 90%;
+      }
+
+      .carousel-button {
+        align-self: flex-start;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 20px;
+        padding: 6px 16px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        backdrop-filter: blur(5px);
+        transition: all 0.2s ease;
+        margin-top: auto;
+
+        &:active {
+          transform: scale(0.95);
+          background: rgba(255, 255, 255, 0.3);
+        }
+      }
+    }
+
+    /* Active state styles */
+    &.active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+
+      &::before {
+        opacity: 0.7;
+      }
+
+      .carousel-content {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Inactive state styles */
+    &:not(.active) {
+      opacity: 0.7;
+      transform: scale(0.98);
+
+      .carousel-content {
+        opacity: 0.8;
+        transform: translateY(10px);
+      }
+    }
+
+    /* Different background gradients for each slide */
+    &:nth-child(1) {
+      background: linear-gradient(
+        135deg,
+        var(--color-primary),
+        var(--color-secondary)
+      );
+    }
+
+    &:nth-child(2) {
+      background: linear-gradient(135deg, #7c3aed, #c084fc);
+    }
+
+    &:nth-child(3) {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+    }
+
+    &:nth-child(4) {
+      background: linear-gradient(135deg, #10b981, #34d399);
+    }
+  }
+
+  /**
+ * Carousel Content
+ * 1. Position content above the overlay
+ * 2. Add a smooth entrance animation
+ */
+  .carousel-content {
+    position: relative;
+    z-index: 3; /* 1 */
+    text-align: center;
+    max-width: 90%;
+    padding: var(--spacing);
+    transition: all var(--transition-slow); /* 2 */
+    will-change: transform, opacity;
+
+    .carousel-icon {
+      font-size: 3rem;
+      margin-bottom: var(--spacing);
+      display: inline-block;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      animation: float 6s ease-in-out infinite;
+    }
+
+    h4 {
+      font-size: 1.75rem;
+      margin: 0 0 var(--spacing-sm) 0;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      line-height: 1.3;
+      letter-spacing: -0.5px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin: 0 0 var(--spacing) 0;
+      opacity: 0.9;
+      color: rgba(255, 255, 255, 0.95);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      max-width: 80%;
+      margin: 0 auto var(--spacing);
+    }
+
+    /* Add a subtle call-to-action button */
+    .btn {
+      display: inline-block;
+      margin-top: var(--spacing);
+      padding: 0.75rem 1.75rem;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all var(--transition);
+      backdrop-filter: blur(5px);
+      text-decoration: none;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        text-decoration: none;
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  /**
+ * Carousel Pagination
+ * 1. Position the pagination at the bottom of the carousel
+ * 2. Add a subtle background for better visibility
+ */
+  .carousel-pagination {
+    position: absolute;
+    bottom: var(--spacing);
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 10;
+    padding: 0.5rem;
+    pointer-events: none; /* Allow clicks to pass through to the carousel */
+
+    .pagination-dot {
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 1rem;
+      background-color: rgba(255, 255, 255, 0.5);
+      transition: all var(--transition);
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      pointer-events: auto; /* Enable clicks on dots */
+
+      /* Active state */
+      &.active {
+        width: 1.5rem;
+        background-color: white;
+        transform: scale(1.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Hover effect */
+      &:not(.active):hover {
+        background-color: rgba(255, 255, 255, 0.7);
+        transform: scale(1.2);
+      }
+    }
+  }
+
+  /**
+ * Carousel Navigation Buttons
+ * 1. Position buttons on the sides of the carousel
+ * 2. Style the navigation buttons
+ */
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    color: var(--color-primary);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition);
+    opacity: 0.8;
+
+    /* Hide on mobile by default */
+    display: none;
+
+    &:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: var(--shadow-lg);
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    /* Previous button */
+    &.prev {
+      left: var(--spacing);
+    }
+
+    /* Next button */
+    &.next {
+      right: var(--spacing);
+    }
+
+    /* Navigation icon */
+    .nav-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: currentColor;
+    }
+  }
+
+  /* ==========================================================================
+ #ANIMATIONS
+ ========================================================================== */
+
+  /**
+ * Float Animation
+ * Creates a gentle floating effect for elements
+ */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) translateZ(0);
+    }
+    50% {
+      transform: translateY(-10px) translateZ(0);
+    }
+  }
+
+  /**
+ * Bounce Animation
+ * Creates a subtle bounce effect for interactive elements
+ */
+  @keyframes bounce {
+    0%,
+    100% {
+      transform: scale(1) translateZ(0);
+      animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+    50% {
+      transform: scale(1.1) translateZ(0);
+      animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+  }
+
+  /**
+ * Pulse Animation
+ * Creates a subtle pulsing effect for attention-grabbing elements
+ */
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1) translateZ(0);
+      box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+    }
+    70% {
+      transform: scale(1.05) translateZ(0);
+      box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+    }
+  }
+
+  /**
+ * Fade In Animation
+ * For smooth appearance of elements
+ */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /**
+ * Slide In Animation
+ * For sliding elements into view
+ */
+  @keyframes slideIn {
+    from {
+      transform: translateX(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  /**
+ * Scale In Animation
+ * For scaling elements into view
+ */
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /**
+ * Rotate Animation
+ * For loading spinners or decorative elements
+ */
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /**
+ * Shimmer Animation
+ * For loading placeholders
+ */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  /* ==========================================================================
+ #RESPONSIVE STYLES
+ ========================================================================== */
+
+  /**
+ * Large devices (desktops, 992px and up)
+ */
+  @media (min-width: 992px) {
+    .carousel-container {
+      max-width: 1200px;
+      margin: var(--spacing-xl) auto;
+      border-radius: var(--radius-xl);
+    }
+
+    .carousel {
+      height: 400px; /* Taller carousel on larger screens */
+    }
+
+    .carousel-content {
+      max-width: 70%;
+
+      h4 {
+        font-size: 2.25rem;
+        margin-bottom: var(--spacing);
+      }
+
+      p {
+        font-size: 1.2rem;
+        max-width: 70%;
+        margin: 0 auto var(--spacing);
+      }
+
+      .btn {
+        padding: 1rem 2rem;
+        font-size: 1.05rem;
+      }
+    }
+
+    /* Show navigation buttons on larger screens */
+    .carousel-nav {
+      display: flex;
+    }
+  }
+
+  /**
+ * Medium devices (tablets, 768px and up)
+ */
+  @media (min-width: 768px) and (max-width: 991.98px) {
+    .carousel {
+      height: 320px;
+    }
+
+    .carousel-content {
+      h4 {
+        font-size: 1.75rem;
+      }
+
+      p {
+        font-size: 1.1rem;
+        max-width: 80%;
+      }
+
+      .btn {
+        padding: 0.9rem 1.8rem;
+      }
+    }
+
+    /* Show navigation buttons on tablets */
+    .carousel-nav {
+      display: flex;
+    }
+  }
+
+  /**
+ * Small devices (landscape phones, 576px and up)
+ */
+  @media (min-width: 576px) and (max-width: 767.98px) {
+    .carousel {
+      height: 280px;
+    }
+
+    .carousel-content {
+      h4 {
+        font-size: 1.5rem;
+      }
+
+      p {
+        font-size: 1rem;
+        max-width: 85%;
+      }
+
+      .btn {
+        padding: 0.8rem 1.6rem;
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  /**
+ * Extra small devices (portrait phones, less than 576px)
+ */
+  @media (max-width: 575.98px) {
+    .carousel {
+      height: auto;
+      min-height: 200px;
+      padding: 8px 16px;
+      line-height: 1.4;
+      max-width: 100%;
+    }
+
+    .carousel-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+  }
+
+  /* Carousel Content Styling */
+  .carousel-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+  }
+
+  .carousel-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .carousel-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 90%;
+    margin: 0 auto;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Carousel Navigation - Hidden */
+  .carousel-nav {
+    display: none !important;
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 1rem;
+    z-index: 5;
+    pointer-events: none;
+    transform: translateY(-50%);
+
+    button {
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      pointer-events: auto;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+        background: white;
+      }
+
+      &::before {
+        content: "";
+        width: 10px;
+        height: 10px;
+        border: 2px solid #4a5568;
+        border-width: 2px 2px 0 0;
+      }
+
+      &:first-child::before {
+        transform: rotate(-135deg);
+        margin-right: -2px;
+      }
+
+      &:last-child::before {
+        transform: rotate(45deg);
+        margin-left: -2px;
+      }
+    }
+  }
+
+  /* Carousel Pagination */
+  .carousel-pagination,
+  .carousel-dots {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    z-index: 5;
+    padding: 0.5rem 0;
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+
+      &.active {
+        width: 24px;
+        background: white;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.8);
+      }
+    }
+  }
+
+  .pagination-dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &.active {
+      width: 1.25rem;
+      border-radius: 0.5rem;
+      background: white;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  /* ==========================================================================
+   #RESPONSIVE STYLES - SMALL PHONES
+   ========================================================================== */
+  @media (max-width: 375px) {
+    .carousel {
+      height: 220px;
+      padding: 1rem 0;
+    }
+
+    .carousel-content {
+      padding: 1rem;
+
+      h4 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 0.8rem;
+        line-height: 1.5;
+        max-width: 95%;
+      }
+
+      .carousel-icon {
+        font-size: 2rem;
+      }
+
+      .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  /* ==========================================================================
+   #ACCESSIBILITY & PERFORMANCE
+   ========================================================================== */
+
+  /**
+ * 1. Remove all animations and transitions for people that prefer not to see them
+ * 2. Disable smooth scrolling when user has prefers-reduced-motion enabled
+ */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  /**
+ * Focus styles for better keyboard navigation
+ */
+  a:focus,
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+  }
+
+  /**
+ * Print styles
+ */
+  @media print {
+    .carousel-container,
+    .carousel-nav,
+    .carousel-pagination {
+      display: none !important;
+    }
+
+    body {
+      background: white !important;
+      color: black !important;
+      font-size: 12pt;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: underline;
+    }
+  }
+}

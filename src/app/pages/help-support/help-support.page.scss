@@ -1,0 +1,103 @@
+.help-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+}
+
+.faq-list {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--ion-color-light);
+  transition: all 0.3s ease;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  &.expanded {
+    background-color: #f8f9fa;
+  }
+
+  .faq-question {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+    background: white;
+    transition: background-color 0.2s ease;
+
+    &:active {
+      background-color: #f0f0f0;
+    }
+
+    ion-label {
+      font-weight: 500;
+      color: var(--ion-color-dark);
+      margin-right: 12px;
+    }
+
+    ion-icon {
+      color: var(--ion-color-medium);
+      font-size: 1.2em;
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .faq-answer {
+    padding: 0 16px 16px;
+    color: var(--ion-color-medium);
+    font-size: 0.95em;
+    line-height: 1.5;
+  }
+}
+
+
+
+.contact-support {
+  text-align: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  h3 {
+    margin: 0 0 0.5rem;
+    color: var(--ion-color-dark);
+  }
+
+  p {
+    color: var(--ion-color-medium);
+    margin: 0 0 1.5rem;
+  }
+
+  ion-button {
+    --border-radius: 8px;
+    --padding-top: 0.9rem;
+    --padding-bottom: 0.9rem;
+  }
+}

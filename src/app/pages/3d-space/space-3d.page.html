@@ -1,0 +1,108 @@
+<ion-content [fullscreen]="true" [scrollY]="true">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-title">
+        <h2>3D LED Matrix</h2>
+        <p>Workspace Simulator</p>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn" (click)="saveProject()">
+          <ion-icon name="save-outline"></ion-icon>
+        </button>
+        <button class="action-btn" (click)="shareProject()">
+          <ion-icon name="share-social-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- LED Matrix Display -->
+      <div class="matrix-container">
+        <h3 class="matrix-title">LED Matrix 16x16</h3>
+        <div class="led-matrix" [class.mode-3d]="is3D" #matrixContainer>
+          <div *ngFor="let led of matrix; let i = index"
+               class="led"
+               [class.active]="led.active"
+               [style.backgroundColor]="led.active ? led.color : ''"
+               [style.boxShadow]="led.active ? '0 0 15px ' + led.color : 'none'"
+               (click)="toggleLED(i, !led.active)"
+               (mousedown)="startDrawing(i)"
+               (mouseup)="stopDrawing()"
+               (mouseenter)="onMouseEnter(i)"
+               (touchstart)="startDrawing(i)"
+               (touchend)="stopDrawing()"
+               (touchmove)="onTouchMove($event)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Control Panel -->
+      <div class="control-panel">
+        <h3 class="control-title">Panel Kontrol</h3>
+        <div class="color-palette">
+          <div *ngFor="let color of colors"
+               class="color-option"
+               [style.backgroundColor]="color.value"
+               [class.active]="currentColor === color.name"
+               (click)="selectColor(color.name)"
+               [title]="color.name">
+          </div>
+        </div>
+        <div class="control-buttons">
+          <button class="ctrl-btn" (click)="clearMatrix()">
+            <ion-icon name="trash-outline"></ion-icon> Clear
+          </button>
+          <button class="ctrl-btn" (click)="fillMatrix()">
+            <ion-icon name="color-fill-outline"></ion-icon> Fill
+          </button>
+          <button class="ctrl-btn" (click)="togglePlay()" [class.active]="isPlaying">
+            <ion-icon [name]="isPlaying ? 'pause' : 'play'"></ion-icon> {{ isPlaying ? 'Pause' : 'Play' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Animation Presets -->
+      <div class="presets-section">
+        <h3 class="control-title">Preset Animasi</h3>
+        <div class="presets-grid">
+          <div class="preset-card" (click)="loadPreset('wave')">
+            <div class="preset-icon">🌊</div>
+            <h4>Wave</h4>
+          </div>
+          <div class="preset-card" (click)="loadPreset('spiral')">
+            <div class="preset-icon">🌀</div>
+            <h4>Spiral</h4>
+          </div>
+          <div class="preset-card" (click)="loadPreset('rain')">
+            <div class="preset-icon">🌧️</div>
+            <h4>Rain</h4>
+          </div>
+          <div class="preset-card" (click)="loadPreset('heart')">
+            <div class="preset-icon">❤️</div>
+            <h4>Heart</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Preview -->
+      <div class="code-preview">
+        <div class="code-header">
+          <h3 class="control-title">Generated Code</h3>
+          <button class="ctrl-btn" (click)="copyCode()">
+            <ion-icon name="copy-outline"></ion-icon> Copy
+          </button>
+        </div>
+        <div class="code-container">
+          <pre><code #codePreview></code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fixed Bottom Container -->
+  <div class="fixed-bottom-container">
+    <app-bottom-nav (navigate)="onNavigate($event)"></app-bottom-nav>
+  </div>
+</ion-content>

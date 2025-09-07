@@ -1,0 +1,307 @@
+<ion-content
+  [fullscreen]="true"
+  class="ion-padding"
+  style="--background: #f5f7fa"
+>
+  <!-- Geometric Shapes Background -->
+  <div class="geometric-shapes">
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="shape"></div>
+  </div>
+
+  <!-- Main Content Wrapper -->
+  <div class="content-wrapper" style="min-height: 100%">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-content">
+        <div class="profile-avatar" (click)="changeAvatar()">
+          <div class="avatar-container">
+            <!-- Profile image with error handling -->
+            <img
+              *ngIf="avatarImage"
+              [src]="avatarImage"
+              (error)="onImageError($event)"
+              (load)="onImageLoad($event)"
+              alt="Profile Avatar"
+              class="avatar-image"
+              [class.loaded]="imageLoaded"
+              [class.error]="imageError"
+              #profileImage
+            />
+
+            <!-- Fallback to initials if no image or error -->
+            <div *ngIf="!avatarImage || imageError" class="avatar-fallback">
+              <span class="avatar-initials">{{ userInitials }}</span>
+            </div>
+
+
+            <!-- Debug info (can be toggled off in production) -->
+            <div *ngIf="debugMode" class="debug-info">
+              <small
+                >{{ avatarImage ? 'Image URL: ' + (avatarImage | slice:0:30) +
+                '...' : 'No image URL' }}</small
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- User info -->
+        <div class="profile-name">{{ userName || 'User' }}</div>
+        <div class="profile-email" *ngIf="userEmail">{{ userEmail }}</div>
+        <div class="profile-role" *ngIf="userRole">{{ userRole }}</div>
+
+        <!-- User stats -->
+        <div class="profile-stats">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.xp || 0 }}</div>
+            <div class="stat-label">XP Points</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.completed || 0 }}</div>
+            <div class="stat-label">Completed</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.certificates || 0 }}</div>
+            <div class="stat-label">Certificates</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Progress -->
+    <div class="level-progress">
+      <div class="level-header">
+        <div class="level-title">Level {{ levelInfo.current }} Progress</div>
+        <div class="level-badge">🏆 {{ levelInfo.title }}</div>
+      </div>
+      <div class="progress-container">
+        <div
+          class="progress-bar"
+          [style.width.%]="getProgressPercentage()"
+        ></div>
+      </div>
+      <div class="progress-text">
+        <span>{{ levelInfo.currentXp }} / {{ levelInfo.nextLevelXp }} XP</span>
+        <span
+          >{{ levelInfo.xpToNextLevel }} XP to Level {{ levelInfo.current + 1
+          }}</span
+        >
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Quick Actions -->
+      <div class="quick-actions">
+        <div class="quick-action" (click)="editProfile()">
+          <div class="quick-action-icon">✏️</div>
+          <div class="quick-action-title">Edit Profile</div>
+          <div class="quick-action-desc">Update info & preferences</div>
+        </div>
+        <div class="quick-action" (click)="viewCertificates()" *ngIf="false">
+          <div class="quick-action-icon">🏆</div>
+          <div class="quick-action-title">Certificates</div>
+          <div class="quick-action-desc">View achievements</div>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="section">
+        <h3 class="section-title">🏅 Recent Achievements</h3>
+        <div class="achievement-grid">
+          <div
+            class="achievement-item"
+            *ngFor="let achievement of achievements"
+            [class.locked]="achievement.locked"
+            (click)="showAchievement(achievement)"
+          >
+            <span class="achievement-icon">{{ achievement.icon }}</span>
+            <div class="achievement-title">{{ achievement.title }}</div>
+            <div class="achievement-desc">{{ achievement.description }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="section">
+        <h3 class="section-title">📈 Recent Activity</h3>
+        <div class="activity-list">
+          <div class="activity-item" *ngFor="let activity of activities">
+            <div class="activity-header">
+              <div class="activity-icon">{{ activity.icon }}</div>
+              <div class="activity-info">
+                <div class="activity-title">{{ activity.title }}</div>
+                <div class="activity-desc">{{ activity.description }}</div>
+              </div>
+              <div class="activity-time">{{ activity.time }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div class="section">
+        <h3 class="section-title">⚙️ Pengaturan</h3>
+        <div class="settings-list">
+          <!-- Other Settings -->
+          <ng-container *ngFor="let setting of settings">
+            <div
+              class="settings-item"
+              (click)="openSettings(setting.id)"
+              *ngIf="setting.id !== 'about'"
+            >
+              <div class="settings-icon" [class]="setting.iconClass">
+                {{ setting.icon }}
+              </div>
+              <div class="settings-info">
+                <div class="settings-title">{{ setting.title }}</div>
+                <div class="settings-desc">{{ setting.description }}</div>
+              </div>
+              <span class="settings-arrow">›</span>
+            </div>
+          </ng-container>
+
+          <!-- Privacy Policy -->
+          <div class="settings-item" (click)="openPrivacyPolicy()">
+            <div
+              class="settings-icon"
+              style="background: #e3f2fd; color: #1976d2"
+            >
+              🔒
+            </div>
+            <div class="settings-info">
+              <div class="settings-title">Kebijakan Privasi</div>
+              <div class="settings-desc">Baca kebijakan privasi kami</div>
+            </div>
+            <span class="settings-arrow">›</span>
+          </div>
+
+          <!-- Help & Support -->
+          <div
+            class="settings-item"
+            [routerLink]="['/help-support']"
+            routerDirection="forward"
+          >
+            <div class="settings-icon help">❓</div>
+            <div class="settings-info">
+              <div class="settings-title">Bantuan & Dukungan</div>
+              <div class="settings-desc">Pusat bantuan dan dukungan</div>
+            </div>
+            <span class="settings-arrow">›</span>
+          </div>
+
+          <!-- Other Settings -->
+          <!-- About EduVox -->
+          <div class="settings-item" (click)="openAboutPage()">
+            <div class="settings-icon about">ℹ️</div>
+            <div class="settings-info">
+              <div class="settings-title">Tentang EduBox</div>
+              <div class="settings-desc">Versi aplikasi dan informasi</div>
+            </div>
+            <span class="settings-arrow">›</span>
+          </div>
+
+<!-- Logout Button -->
+          <div class="settings-item" (click)="logout()">
+            <div
+              class="settings-icon"
+              style="background: #ffebee; color: #d32f2f"
+            >
+              🚪
+            </div>
+            <div class="settings-info">
+              <div class="settings-title" style="color: #d32f2f">Logout</div>
+              <div class="settings-desc">Keluar dari akun Anda</div>
+            </div>
+            <span class="settings-arrow" style="color: #d32f2f">›</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of content-wrapper -->
+
+  <!-- Bottom Navigation -->
+  <app-bottom-nav></app-bottom-nav>
+</ion-content>
+
+<!-- Edit Profile Modal -->
+<ion-modal
+  [isOpen]="showEditModal"
+  (didDismiss)="closeEditModal()"
+  class="edit-profile-modal"
+>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Edit Profil</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeEditModal()">Tutup</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <div class="edit-avatar-container" (click)="changeAvatar()">
+        <div class="avatar-container">
+          <img
+            *ngIf="avatarImage"
+            [src]="avatarImage"
+            alt="Profile Avatar"
+            class="avatar-image"
+          />
+          <span *ngIf="!avatarImage" class="avatar-placeholder"
+            >{{ userInitials }}</span
+          >
+          <div class="avatar-overlay">
+            <ion-icon name="camera" class="camera-icon"></ion-icon>
+          </div>
+        </div>
+        <div class="edit-avatar-text">Ubah Foto Profil</div>
+      </div>
+
+      <ion-list lines="full" class="ion-margin-top">
+        <ion-item>
+          <ion-label position="floating">Nama Lengkap</ion-label>
+          <ion-input [(ngModel)]="editForm.displayName" type="text"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Bio/Deskripsi</ion-label>
+          <ion-textarea [(ngModel)]="editForm.bio" rows="3"></ion-textarea>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input [(ngModel)]="editForm.email" type="email"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Nomor Telepon</ion-label>
+          <ion-input [(ngModel)]="editForm.phoneNumber" type="tel"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <div class="ion-padding">
+        <ion-button expand="block" (click)="saveProfile()" class="save-button">
+          Simpan Perubahan
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+<!-- Achievement Modal -->
+<div class="modal" [class.show]="showModal" *ngIf="modalData">
+  <div class="modal-content">
+    <div class="modal-icon">{{ modalData.icon || '🏆' }}</div>
+    <div class="modal-title">
+      {{ modalData.title || 'Achievement Unlocked!' }}
+    </div>
+    <div class="modal-desc">
+      {{ modalData.description || 'Congratulations on your achievement!' }}
+    </div>
+    <button class="modal-btn" (click)="closeModal()">Awesome!</button>
+  </div>
+</div>

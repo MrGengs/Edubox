@@ -1,0 +1,24 @@
+<div class="bottom-nav">
+  <div class="nav-items">
+    <div class="nav-item" (click)="onNavigate('home')" [class.active]="isActive('home')">
+      <ion-icon name="home-outline" class="nav-icon"></ion-icon>
+      <div class="nav-label">Beranda</div>
+    </div>
+    <div class="nav-item" (click)="onNavigate('3d-space')" [class.active]="isActive('3d-space')">
+      <ion-icon name="cube-outline" class="nav-icon"></ion-icon>
+      <div class="nav-label">3D Space</div>
+    </div>
+    <div class="nav-item" (click)="onNavigate('coding')" [class.active]="isActive('coding')">
+      <ion-icon name="code-slash-outline" class="nav-icon"></ion-icon>
+      <div class="nav-label">Coding</div>
+    </div>
+    <div class="nav-item" (click)="onNavigate('modul')" [class.active]="isActive('modul')">
+      <ion-icon name="book-outline" class="nav-icon"></ion-icon>
+      <div class="nav-label">Modul</div>
+    </div>
+    <div class="nav-item" (click)="onNavigate('profile')" [class.active]="isActive('profile')">
+      <ion-icon name="person-outline" class="nav-icon"></ion-icon>
+      <div class="nav-label">Profile</div>
+    </div>
+  </div>
+</div>

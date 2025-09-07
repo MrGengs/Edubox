@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="goBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Bantuan & Dukungan</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="help-header">
+    <h1>Pertanyaan yang Sering Diajukan</h1>
+    <p>Temukan jawaban untuk pertanyaan umum tentang EduBox</p>
+  </div>
+
+  <div class="faq-list">
+    <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.expanded]="faq.expanded">
+      <div class="faq-question" (click)="toggleFaq(i, $event)">
+        <ion-label>{{ faq.question }}</ion-label>
+        <ion-icon slot="end" [name]="faq.expanded ? 'remove' : 'add'" class="faq-toggle"></ion-icon>
+      </div>
+      <div class="faq-answer" *ngIf="faq.expanded">
+        <p>{{ faq.answer }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-support">
+    <h3>Butuh bantuan lebih lanjut?</h3>
+    <p>Tim dukungan kami siap membantu Anda</p>
+    <ion-button expand="block" fill="outline" (click)="contactSupport()">
+      <ion-icon name="mail-outline" slot="start"></ion-icon>
+      <ion-label>Hubungi Dukungan</ion-label>
+    </ion-button>
+  </div>
+</ion-content>
