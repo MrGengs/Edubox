@@ -49,7 +49,7 @@
 
         <!-- User info -->
         <div class="profile-name">{{ userName || 'User' }}</div>
-        <div class="profile-email" *ngIf="userEmail">{{ userEmail }}</div>
+        <div class="profile-bio" *ngIf="userBio">{{ userBio }}</div>
         <div class="profile-role" *ngIf="userRole">{{ userRole }}</div>
 
         <!-- User stats -->
@@ -93,19 +93,6 @@
 
     <!-- Main Content -->
     <div class="main-content">
-      <!-- Quick Actions -->
-      <div class="quick-actions">
-        <div class="quick-action" (click)="editProfile()">
-          <div class="quick-action-icon">✏️</div>
-          <div class="quick-action-title">Edit Profile</div>
-          <div class="quick-action-desc">Update info & preferences</div>
-        </div>
-        <div class="quick-action" (click)="viewCertificates()" *ngIf="false">
-          <div class="quick-action-icon">🏆</div>
-          <div class="quick-action-title">Certificates</div>
-          <div class="quick-action-desc">View achievements</div>
-        </div>
-      </div>
 
       <!-- Achievements -->
       <div class="section">
@@ -145,12 +132,24 @@
       <div class="section">
         <h3 class="section-title">⚙️ Pengaturan</h3>
         <div class="settings-list">
-          <!-- Other Settings -->
+          <!-- Akun Settings -->
+          <div class="settings-item" (click)="editProfile()">
+            <div class="settings-icon" style="background: rgba(25, 118, 210, 0.1); color: #1976d2">
+              <ion-icon name="person-outline"></ion-icon>
+            </div>
+            <div class="settings-info">
+              <div class="settings-title" style="color: #1976d2">Pengaturan Akun</div>
+              <div class="settings-desc">Ubah profil dan pengaturan akun</div>
+            </div>
+            <span class="settings-arrow" style="color: #1976d2">›</span>
+          </div>
+
+          <!-- Settings are now managed through the settings array in the component -->
           <ng-container *ngFor="let setting of settings">
             <div
               class="settings-item"
               (click)="openSettings(setting.id)"
-              *ngIf="setting.id !== 'about'"
+              *ngIf="setting.id !== 'about' && setting.id !== 'account' && setting.id !== 'notifications' && setting.id !== 'privacy'"
             >
               <div class="settings-icon" [class]="setting.iconClass">
                 {{ setting.icon }}
@@ -165,17 +164,14 @@
 
           <!-- Privacy Policy -->
           <div class="settings-item" (click)="openPrivacyPolicy()">
-            <div
-              class="settings-icon"
-              style="background: #e3f2fd; color: #1976d2"
-            >
-              🔒
+            <div class="settings-icon" style="background: rgba(30, 136, 229, 0.1); color: #1e88e5">
+              <ion-icon name="shield-checkmark-outline"></ion-icon>
             </div>
             <div class="settings-info">
-              <div class="settings-title">Kebijakan Privasi</div>
+              <div class="settings-title" style="color: #1e88e5">Kebijakan Privasi</div>
               <div class="settings-desc">Baca kebijakan privasi kami</div>
             </div>
-            <span class="settings-arrow">›</span>
+            <span class="settings-arrow" style="color: #1e88e5">›</span>
           </div>
 
           <!-- Help & Support -->
@@ -184,23 +180,26 @@
             [routerLink]="['/help-support']"
             routerDirection="forward"
           >
-            <div class="settings-icon help">❓</div>
+            <div class="settings-icon" style="background: rgba(0, 150, 136, 0.1); color: #009688">
+              <ion-icon name="help-circle-outline"></ion-icon>
+            </div>
             <div class="settings-info">
-              <div class="settings-title">Bantuan & Dukungan</div>
+              <div class="settings-title" style="color: #009688">Bantuan & Dukungan</div>
               <div class="settings-desc">Pusat bantuan dan dukungan</div>
             </div>
-            <span class="settings-arrow">›</span>
+            <span class="settings-arrow" style="color: #009688">›</span>
           </div>
 
-          <!-- Other Settings -->
-          <!-- About EduVox -->
+          <!-- About EduBox -->
           <div class="settings-item" (click)="openAboutPage()">
-            <div class="settings-icon about">ℹ️</div>
+            <div class="settings-icon" style="background: rgba(103, 58, 183, 0.1); color: #673ab7">
+              <ion-icon name="information-circle-outline"></ion-icon>
+            </div>
             <div class="settings-info">
-              <div class="settings-title">Tentang EduBox</div>
+              <div class="settings-title" style="color: #673ab7">Tentang EduBox</div>
               <div class="settings-desc">Versi aplikasi dan informasi</div>
             </div>
-            <span class="settings-arrow">›</span>
+            <span class="settings-arrow" style="color: #673ab7">›</span>
           </div>
 
 <!-- Logout Button -->
@@ -209,7 +208,7 @@
               class="settings-icon"
               style="background: #ffebee; color: #d32f2f"
             >
-              🚪
+              <ion-icon name="log-out-outline" style="font-size: 1.5rem;"></ion-icon>
             </div>
             <div class="settings-info">
               <div class="settings-title" style="color: #d32f2f">Logout</div>

@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef,
+  inject,
+} from '@angular/core';
 import { NgZone } from '@angular/core';
 import { Subscription } from 'rxjs';
 import {
@@ -16,8 +22,21 @@ import {
   Platform,
   ModalController,
 } from '@ionic/angular';
-import { Firestore, doc, updateDoc, serverTimestamp, getDoc, setDoc, collection } from '@angular/fire/firestore';
-import { Auth, User, onAuthStateChanged, Unsubscribe } from '@angular/fire/auth';
+import {
+  Firestore,
+  doc,
+  updateDoc,
+  serverTimestamp,
+  getDoc,
+  setDoc,
+  collection,
+} from '@angular/fire/firestore';
+import {
+  Auth,
+  User,
+  onAuthStateChanged,
+  Unsubscribe,
+} from '@angular/fire/auth';
 import { getAuth } from 'firebase/auth';
 import { getFirestore, collection as getCollection } from 'firebase/firestore';
 
@@ -190,29 +209,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     },
   ];
 
-  settings: SettingItem[] = [
-    {
-      id: 'account',
-      icon: '',
-      title: 'Account Settings',
-      description: 'Manage your account information',
-      iconClass: 'account',
-    },
-    {
-      id: 'notifications',
-      icon: '',
-      title: 'Notifications',
-      description: 'Customize notification preferences',
-      iconClass: 'notification',
-    },
-    {
-      id: 'privacy',
-      icon: '',
-      title: 'Privacy & Security',
-      description: 'Control your privacy settings',
-      iconClass: 'privacy',
-    },
-  ];
+  settings: any[] = [];
 
   private firestore: Firestore;
   private firestoreInstance: any;
@@ -247,14 +244,15 @@ export class ProfilePage implements OnInit, OnDestroy {
 
       // Get the Firebase Auth instance
       const auth = getAuth();
-      
+
       // Subscribe to auth state changes
-      this.authUnsubscribe = onAuthStateChanged(auth, 
+      this.authUnsubscribe = onAuthStateChanged(
+        auth,
         async (user: User | null) => {
           await this.ngZone.run(async () => {
             try {
               this.user = user;
-              
+
               if (user) {
                 await this.loadUserData();
               } else {
@@ -263,7 +261,9 @@ export class ProfilePage implements OnInit, OnDestroy {
               }
             } catch (error) {
               console.error('Error in auth state change:', error);
-              this.showErrorToast('Terjadi kesalahan saat memuat data pengguna');
+              this.showErrorToast(
+                'Terjadi kesalahan saat memuat data pengguna'
+              );
             } finally {
               this.isLoading = false;
               this.cdr.detectChanges();
@@ -300,7 +300,7 @@ export class ProfilePage implements OnInit, OnDestroy {
         this.authUnsubscribe = null;
       }
     }
-    
+
     // Clean up any other subscriptions
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
@@ -335,33 +335,37 @@ export class ProfilePage implements OnInit, OnDestroy {
 
       // Get a reference to the user's document using the Firestore instance
       const userDocRef = doc(this.firestoreInstance, 'users', this.user.uid);
-      
+
       // Add a timeout to prevent hanging
-      const timeoutPromise = new Promise((_, reject) => 
+      const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error('Request timed out')), 10000)
       );
 
       // Race between the getDoc and the timeout
-      const userDoc = await Promise.race([
+      const userDoc = (await Promise.race([
         getDoc(userDocRef),
-        timeoutPromise
-      ]) as any;
-      
+        timeoutPromise,
+      ])) as any;
+
       await this.ngZone.run(async () => {
         try {
           if (userDoc?.exists()) {
             const userData = userDoc.data() as AppUserProfile;
             const currentUser = this.user; // Store in a variable to avoid repeated null checks
-            
-            this.userName = userData.displayName || currentUser?.displayName || 'User';
+
+            this.userName =
+              userData.displayName || currentUser?.displayName || 'User';
             this.userEmail = userData.email || currentUser?.email || '';
             this.userRole = userData.role || 'Student';
             this.userBio = userData.bio || '';
-            this.userPhone = userData.phoneNumber || currentUser?.phoneNumber || '';
+            this.userPhone =
+              userData.phoneNumber || currentUser?.phoneNumber || '';
             this.userInitials = this.generateInitials(this.userName);
-            
+
             const photoUrl = userData.photoURL || currentUser?.photoURL;
-            this.avatarImage = photoUrl ? photoUrl.replace(/=s96-c$/, '=s400-c') : null;
+            this.avatarImage = photoUrl
+              ? photoUrl.replace(/=s96-c$/, '=s400-c')
+              : null;
           } else {
             console.log('No user document found, creating profile...');
             await this.createUserProfile();
@@ -381,7 +385,10 @@ export class ProfilePage implements OnInit, OnDestroy {
       this.ngZone.run(() => {
         this.userName = 'Error';
         this.userInitials = '!!';
-        this.showErrorToast('Gagal memuat data pengguna: ' + (error instanceof Error ? error.message : 'Unknown error'));
+        this.showErrorToast(
+          'Gagal memuat data pengguna: ' +
+            (error instanceof Error ? error.message : 'Unknown error')
+        );
         this.isLoading = false;
         this.cdr.detectChanges();
       });
@@ -413,7 +420,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       const email = this.user.email || '';
       const phoneNumber = this.user.phoneNumber || '';
       const photoURL = this.user.photoURL || null;
-      
+
       // Create user data object with proper types for Firestore
       const userData = {
         uid: this.user.uid,
@@ -438,7 +445,9 @@ export class ProfilePage implements OnInit, OnDestroy {
         this.userEmail = email;
         this.userPhone = phoneNumber;
         this.userInitials = this.generateInitials(displayName);
-        this.avatarImage = photoURL ? photoURL.replace(/=s96-c$/, '=s400-c') : null;
+        this.avatarImage = photoURL
+          ? photoURL.replace(/=s96-c$/, '=s400-c')
+          : null;
         this.isLoading = false;
         this.cdr.detectChanges();
       });
@@ -504,13 +513,13 @@ export class ProfilePage implements OnInit, OnDestroy {
     ).toUpperCase();
   }
 
-  // Edit profile method - initialize form with empty values
+  // Edit profile method - initialize form with current user data
   editProfile() {
     this.editForm = {
-      displayName: '',
-      bio: '',
-      email: '',
-      phoneNumber: '',
+      displayName: this.userName,
+      bio: this.userBio,
+      email: this.userEmail,
+      phoneNumber: this.userPhone,
     };
     this.showEditModal = true;
   }
@@ -758,7 +767,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       buttons: [
         {
           text: 'Batal',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Hapus',
@@ -777,7 +786,11 @@ export class ProfilePage implements OnInit, OnDestroy {
               }
 
               // Update user profile in Firestore using the Firestore instance
-              const userDocRef = doc(this.firestoreInstance, 'users', this.user.uid);
+              const userDocRef = doc(
+                this.firestoreInstance,
+                'users',
+                this.user.uid
+              );
               await updateDoc(userDocRef, {
                 photoURL: null,
                 updatedAt: serverTimestamp(),
@@ -793,7 +806,9 @@ export class ProfilePage implements OnInit, OnDestroy {
                 const names = (this.userName || 'User').split(' ');
                 this.userInitials =
                   names.length > 1
-                    ? `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase()
+                    ? `${names[0][0]}${
+                        names[names.length - 1][0]
+                      }`.toUpperCase()
                     : (this.userName || 'Us').substring(0, 2).toUpperCase();
 
                 // Reset avatar image
@@ -802,19 +817,26 @@ export class ProfilePage implements OnInit, OnDestroy {
               });
 
               // Show success message
-              await this.presentToast('Foto profil berhasil dihapus', 'success');
+              await this.presentToast(
+                'Foto profil berhasil dihapus',
+                'success'
+              );
             } catch (error) {
               console.error('Error removing profile image:', error);
-              const errorMessage = error instanceof Error ? error.message : 'Terjadi kesalahan';
-              await this.presentToast(`Gagal menghapus foto profil: ${errorMessage}`, 'danger');
+              const errorMessage =
+                error instanceof Error ? error.message : 'Terjadi kesalahan';
+              await this.presentToast(
+                `Gagal menghapus foto profil: ${errorMessage}`,
+                'danger'
+              );
             } finally {
               if (loading) {
                 await loading.dismiss();
               }
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -960,49 +982,7 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   // Method to handle logout
   async openPrivacyPolicy() {
-    const alert = await this.alertController.create({
-      header: 'Kebijakan Privasi',
-      message: `
-        <div style="text-align: left; max-height: 50vh; overflow-y: auto;">
-          <h3>Kebijakan Privasi EduBox</h3>
-          <p>Terakhir diperbarui: 2 September 2025</p>
-          
-          <h4>1. Informasi yang Kami Kumpulkan</h4>
-          <p>Kami mengumpulkan informasi yang Anda berikan saat mendaftar, seperti nama, alamat email, dan data profil lainnya.</p>
-          
-          <h4>2. Penggunaan Informasi</h4>
-          <p>Informasi yang kami kumpulkan digunakan untuk:</p>
-          <ul>
-            <li>Menyediakan dan memelihara layanan</li>
-            <li>Mengelola akun Anda</li>
-            <li>Meningkatkan pengalaman pengguna</li>
-            <li>Mengirim pembaruan dan informasi penting</li>
-          </ul>
-          
-          <h4>3. Perlindungan Data</h4>
-          <p>Kami menerapkan langkah-langkah keamanan yang sesuai untuk melindungi informasi pribadi Anda.</p>
-          
-          <h4>4. Perubahan pada Kebijakan Privasi</h4>
-          <p>Kebijakan privasi ini dapat diperbarui dari waktu ke waktu. Perubahan akan diberitahukan melalui aplikasi.</p>
-        </div>
-      `,
-      buttons: [
-        {
-          text: 'Tutup',
-          role: 'cancel'
-        },
-        {
-          text: 'Baca Selengkapnya',
-          handler: () => {
-            // You can add a link to your full privacy policy page here
-            window.open('https://www.example.com/privacy-policy', '_system');
-          }
-        }
-      ],
-      cssClass: 'privacy-policy-alert'
-    });
-
-    await alert.present();
+    this.router.navigate(['/privacy-policy']);
   }
 
   async logout() {

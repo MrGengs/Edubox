@@ -4,6 +4,7 @@ import { PrivacyPolicyPage } from './privacy-policy.page';
 
 @NgModule({
   imports: [
+    PrivacyPolicyPage,
     RouterModule.forChild([
       {
         path: '',

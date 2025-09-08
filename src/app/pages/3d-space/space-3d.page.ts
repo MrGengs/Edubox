@@ -1,4 +1,14 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Renderer2, HostListener, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  Renderer2,
+  HostListener,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { BottomNavComponent } from '../../shared/components/bottom-nav/bottom-nav.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,13 +26,8 @@ interface LED {
   templateUrl: './space-3d.page.html',
   styleUrls: ['./space-3d.page.scss'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    BottomNavComponent,
-    IonicModule
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  imports: [CommonModule, FormsModule, BottomNavComponent, IonicModule],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class Space3DPage implements OnInit, OnDestroy {
   @ViewChild('matrixContainer', { static: true }) matrixContainer!: ElementRef;
@@ -30,15 +35,15 @@ export class Space3DPage implements OnInit, OnDestroy {
   particlesContainer!: ElementRef;
   @ViewChild('codePreview', { static: false }) codePreviewElement!: ElementRef;
 
-  // Navigation
-  private navCtrl = inject(NavController);
-  private router = inject(Router);
+  // Navigation properties moved to constructor
 
   // State
   currentColor = 'green';
   is3D = false;
   isPlaying = false;
   isDrawing = false;
+  selectedPreset: string | null = null;
+  showPlaybackControls = false;
   private animationFrameId: number | null = null;
   private animationInterval: any = null;
   private patternInterval: any = null;
@@ -61,17 +66,25 @@ export class Space3DPage implements OnInit, OnDestroy {
   readonly MATRIX_SIZE = 16;
   private readonly TOTAL_LEDS = this.MATRIX_SIZE * this.MATRIX_SIZE;
 
-  // Inject services
-  private renderer = inject(Renderer2);
-
-  constructor() {}
+  constructor(
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
+    private navCtrl: NavController,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+    // Initialize with buttons hidden
+    this.showPlaybackControls = false;
+    this.isPlaying = false;
+    
     // Use setTimeout to ensure the view is fully initialized
     setTimeout(() => {
       this.initializeMatrix();
       this.createParticles(50);
       this.updateCode();
+      // Force update the view after initialization
+      this.cdr.detectChanges();
     }, 0);
   }
 
@@ -102,7 +115,7 @@ export class Space3DPage implements OnInit, OnDestroy {
       // Add event listeners
       const row = Math.floor(i / this.MATRIX_SIZE);
       const col = i % this.MATRIX_SIZE;
-      
+
       this.renderer.listen(ledElement, 'mousedown', () => this.startDrawing(i));
       this.renderer.listen(ledElement, 'mouseenter', () =>
         this.onMouseEnter(row, col)
@@ -127,13 +140,17 @@ export class Space3DPage implements OnInit, OnDestroy {
     if (led) {
       led.active = state !== undefined ? state : !led.active;
       led.color = this.currentColor;
-      
+
       // Update the element if it exists
       if (led.element) {
         if (led.active) {
           this.renderer.addClass(led.element, 'active');
           this.renderer.setStyle(led.element, 'background-color', led.color);
-          this.renderer.setStyle(led.element, 'box-shadow', `0 0 15px ${led.color}`);
+          this.renderer.setStyle(
+            led.element,
+            'box-shadow',
+            `0 0 15px ${led.color}`
+          );
         } else {
           this.renderer.removeClass(led.element, 'active');
           this.renderer.removeStyle(led.element, 'background-color');
@@ -191,7 +208,7 @@ export class Space3DPage implements OnInit, OnDestroy {
   onMouseEnter(row: number, col?: number) {
     if (this.isDrawing) {
       // Handle both (row, col) and (index) calls
-      const index = col !== undefined ? (row * this.MATRIX_SIZE + col) : row;
+      const index = col !== undefined ? row * this.MATRIX_SIZE + col : row;
       this.toggleLED(index, true);
     }
   }
@@ -463,6 +480,16 @@ export class Space3DPage implements OnInit, OnDestroy {
 
   // Load preset pattern
   loadPreset(preset: string) {
+    this.selectedPreset = preset;
+    this.isPlaying = false; // Reset play state when changing presets
+    
+    // Only show playback controls for wave, rain, and spiral presets
+    const validPresets = ['wave', 'rain', 'spiral'];
+    this.showPlaybackControls = validPresets.includes(preset);
+    
+    // Force UI update
+    this.cdr.detectChanges();
+    
     switch (preset) {
       case 'wave':
         this.createWavePattern();
@@ -482,7 +509,9 @@ export class Space3DPage implements OnInit, OnDestroy {
   // Copy code to clipboard
   async copyCode() {
     try {
-      await navigator.clipboard.writeText(this.codePreviewElement.nativeElement.textContent);
+      await navigator.clipboard.writeText(
+        this.codePreviewElement.nativeElement.textContent
+      );
       // TODO: Show success message
       console.log('Code copied to clipboard');
     } catch (err) {

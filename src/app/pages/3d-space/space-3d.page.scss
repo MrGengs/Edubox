@@ -579,6 +579,19 @@ ion-content {
   color: white;
   border-radius: 10px;
   padding: 12px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  &.hidden {
+    display: none;
+  }
+  
+  ion-icon {
+    font-size: 1.1em;
+  }
 }
 
 /* Presets */
