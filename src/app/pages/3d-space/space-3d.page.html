@@ -7,12 +7,7 @@
         <p>Workspace Simulator</p>
       </div>
       <div class="header-actions">
-        <button class="action-btn" (click)="saveProject()">
-          <ion-icon name="save-outline"></ion-icon>
-        </button>
-        <button class="action-btn" (click)="shareProject()">
-          <ion-icon name="share-social-outline"></ion-icon>
-        </button>
+        <!-- Save and share buttons removed -->
       </div>
     </div>
 
@@ -102,16 +97,30 @@
         </div>
       </div>
 
-      <!-- Code Preview -->
-      <div class="code-preview">
+      <!-- Code Preview Section -->
+      <div class="code-preview" *ngIf="generatedCode">
         <div class="code-header">
-          <h3 class="control-title">Generated Code</h3>
-          <button class="ctrl-btn" (click)="copyCode()">
-            <ion-icon name="copy-outline"></ion-icon> Copy
+          <div class="code-title">
+            <ion-icon name="code-slash-outline" class="code-icon"></ion-icon>
+            <h3>Kode Generate</h3>
+          </div>
+          <button 
+            class="ctrl-btn" 
+            (click)="copyCode()"
+            [class.copied]="isCopied"
+            [disabled]="isCopied">
+            <ion-icon name="checkmark-circle" class="check-icon"></ion-icon>
+            <ion-icon name="copy" class="copy-icon"></ion-icon>
+            <span class="btn-text">{{ isCopied ? 'Tersalin!' : 'Salin Kode' }}</span>
           </button>
         </div>
+        
         <div class="code-container">
-          <pre><code #codePreview></code></pre>
+          <pre><code #codePreview>{{ generatedCode }}</code></pre>
+        </div>
+        
+        <div class="code-footer">
+          <span class="hint">Klik tombol di atas untuk menyalin kode</span>
         </div>
       </div>
     </div>

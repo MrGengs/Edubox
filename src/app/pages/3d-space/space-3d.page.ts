@@ -35,6 +35,10 @@ export class Space3DPage implements OnInit, OnDestroy {
   particlesContainer!: ElementRef;
   @ViewChild('codePreview', { static: false }) codePreviewElement!: ElementRef;
 
+  // Code Generation
+  generatedCode: string = '';
+  private codeUpdateInterval: any = null;
+
   // Navigation properties moved to constructor
 
   // State
@@ -77,19 +81,59 @@ export class Space3DPage implements OnInit, OnDestroy {
     // Initialize with buttons hidden
     this.showPlaybackControls = false;
     this.isPlaying = false;
-    
+
     // Use setTimeout to ensure the view is fully initialized
     setTimeout(() => {
       this.initializeMatrix();
       this.createParticles(50);
-      this.updateCode();
+      this.setupEventListeners();
+      this.setupCodeGeneration();
       // Force update the view after initialization
       this.cdr.detectChanges();
     }, 0);
   }
 
+
+
+  // Clean up all animations and intervals
+  private cleanupAnimations() {
+    if (this.animationFrameId) {
+      cancelAnimationFrame(this.animationFrameId);
+      this.animationFrameId = null;
+    }
+
+    if (this.animationInterval) {
+      clearInterval(this.animationInterval);
+      this.animationInterval = null;
+    }
+
+    if (this.patternInterval) {
+      clearInterval(this.patternInterval);
+      this.patternInterval = null;
+    }
+
+    if (this.spiralAnimationFrame) {
+      cancelAnimationFrame(this.spiralAnimationFrame);
+      this.spiralAnimationFrame = null;
+    }
+
+    if (this.rainAnimationFrame) {
+      cancelAnimationFrame(this.rainAnimationFrame);
+      this.rainAnimationFrame = null;
+    }
+  }
+
   ngOnDestroy() {
     this.cleanupAnimations();
+    this.renderer.destroy();
+    if (this.codeUpdateInterval) {
+      clearInterval(this.codeUpdateInterval);
+    }
+  }
+
+  // Setup event listeners
+  private setupEventListeners() {
+    window.addEventListener('resize', () => this.onResize());
   }
 
   // Initialize the LED matrix
@@ -135,17 +179,23 @@ export class Space3DPage implements OnInit, OnDestroy {
   }
 
   // Toggle LED state
-  toggleLED(index: number, state?: boolean) {
+  toggleLED(index: number, state?: boolean, ignoreColorChange = false) {
     const led = this.matrix[index];
     if (led) {
       led.active = state !== undefined ? state : !led.active;
-      led.color = this.currentColor;
+
+      // Jangan ubah warna jika ini adalah bagian dari animasi spiral
+      if (!ignoreColorChange) {
+        led.color = this.currentColor;
+      }
 
       // Update the element if it exists
       if (led.element) {
         if (led.active) {
           this.renderer.addClass(led.element, 'active');
-          this.renderer.setStyle(led.element, 'background-color', led.color);
+          // Gunakan warna yang sudah ada di LED jika ignoreColorChange true
+          const colorToUse = ignoreColorChange ? led.color : this.currentColor;
+          this.renderer.setStyle(led.element, 'background-color', colorToUse);
           this.renderer.setStyle(
             led.element,
             'box-shadow',
@@ -264,8 +314,58 @@ export class Space3DPage implements OnInit, OnDestroy {
     }
   }
 
+  private spiralFrame = 0;
+  private spiralAnimationFrame: number | null = null;
+
+  private animateSpiral() {
+    if (!this.isPlaying || this.selectedPreset !== 'spiral') {
+      if (this.spiralAnimationFrame) {
+        cancelAnimationFrame(this.spiralAnimationFrame);
+        this.spiralAnimationFrame = null;
+      }
+      return;
+    }
+
+    this.clearMatrix();
+
+    const center = 7.5;
+    const angle = this.spiralFrame * 0.1;
+    const maxRadius = 12;
+
+    // Gambar spiral dengan warna biru tetap
+    for (let r = 0; r < maxRadius; r += 0.5) {
+      const x = Math.round(center + Math.cos(angle + r * 0.5) * r);
+      const y = Math.round(center + Math.sin(angle + r * 0.5) * r);
+
+      if (x >= 0 && x < this.MATRIX_SIZE && y >= 0 && y < this.MATRIX_SIZE) {
+        const index = y * this.MATRIX_SIZE + x;
+        if (this.matrix[index]) {
+          // Setel langsung ke biru tanpa tergantung currentColor
+          this.matrix[index].color = '#0000ff';
+          this.matrix[index].active = true;
+
+          // Update tampilan langsung
+          if (this.matrix[index].element) {
+            const el = this.matrix[index].element as HTMLElement;
+            el.style.backgroundColor = '#0000ff';
+            el.style.boxShadow = '0 0 15px #0000ff';
+          }
+        }
+      }
+    }
+
+    this.spiralFrame++;
+    this.spiralAnimationFrame = requestAnimationFrame(() =>
+      this.animateSpiral()
+    );
+  }
+
   createSpiralPattern() {
     this.clearMatrix();
+    this.pauseAnimation();
+    this.spiralFrame = 0;
+
+    // Draw initial spiral pattern in blue
     const center = 7.5;
     let delay = 0;
 
@@ -279,7 +379,11 @@ export class Space3DPage implements OnInit, OnDestroy {
 
         if (Math.sin(angle * 3 + distance * 0.5) > 0.3) {
           setTimeout(() => {
-            this.toggleLED(index, true);
+            // Set color to blue before toggling
+            if (this.matrix[index]) {
+              this.matrix[index].color = '#0000ff';
+              this.toggleLED(index, true, true);
+            }
           }, delay);
           delay += 30;
         }
@@ -287,22 +391,32 @@ export class Space3DPage implements OnInit, OnDestroy {
     }
   }
 
+  // Rain animation state
+  private raindrops: { col: number; row: number; speed: number }[] = [];
+  private rainAnimationFrame: number | null = null;
+
+  // Add a new raindrop at a random position above the matrix
+  private addRaindrop() {
+    this.raindrops.push({
+      col: Math.floor(Math.random() * this.MATRIX_SIZE),
+      row: -Math.floor(Math.random() * 5), // Start above the matrix
+      speed: 0.5 + Math.random() * 1.5, // Random speed
+    });
+  }
+
+  // Create rain pattern
   createRainPattern() {
     this.clearMatrix();
-    for (let col = 0; col < this.MATRIX_SIZE; col++) {
-      if (Math.random() > 0.6) {
-        const height = Math.floor(Math.random() * 12) + 4;
-        for (let row = 0; row < height; row++) {
-          const index = row * this.MATRIX_SIZE + col;
-          setTimeout(() => {
-            const tempColor = this.currentColor;
-            this.currentColor = 'blue';
-            this.toggleLED(index, true);
-            this.currentColor = tempColor;
-          }, row * 100 + col * 50);
-        }
-      }
+    this.pauseAnimation(); // Stop any existing animation
+
+    // Initialize raindrops but don't start animation yet
+    this.raindrops = [];
+    for (let i = 0; i < 15; i++) {
+      this.addRaindrop();
     }
+
+    // Don't start animation here, just prepare the raindrops
+    this.isPlaying = false;
   }
 
   createHeartPattern() {
@@ -310,7 +424,7 @@ export class Space3DPage implements OnInit, OnDestroy {
     const heartPattern = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+      [0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
       [0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0],
       [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
       [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
@@ -343,97 +457,190 @@ export class Space3DPage implements OnInit, OnDestroy {
     }
   }
 
-  // Animation controls
-  playAnimation() {
-    if (this.animationInterval) {
-      clearInterval(this.animationInterval);
+  private animateRain() {
+    if (!this.isPlaying || this.selectedPreset !== 'rain') return;
+
+    // Clear the matrix
+    this.matrix.forEach((_, index) => this.toggleLED(index, false));
+
+    // Update and draw raindrops
+    this.raindrops = this.raindrops
+      .map((drop) => {
+        const newRow = drop.row + drop.speed;
+
+        // If drop is still in the matrix, keep it
+        if (newRow < this.MATRIX_SIZE) {
+          // Draw the drop
+          const index = Math.floor(newRow) * this.MATRIX_SIZE + drop.col;
+          if (index >= 0 && index < this.matrix.length) {
+            const tempColor = this.currentColor;
+            this.currentColor = 'blue';
+            this.toggleLED(index, true);
+
+            // Draw a trail
+            for (let i = 1; i < 3; i++) {
+              const trailRow = Math.floor(newRow) - i;
+              if (trailRow >= 0) {
+                const trailIndex = trailRow * this.MATRIX_SIZE + drop.col;
+                if (trailIndex >= 0 && trailIndex < this.matrix.length) {
+                  this.toggleLED(trailIndex, true);
+                }
+              }
+            }
+            this.currentColor = tempColor;
+          }
+
+          return { ...drop, row: newRow };
+        } else {
+          // Drop has fallen off the bottom, replace it with a new one
+          this.addRaindrop();
+          return null;
+        }
+      })
+      .filter((drop) => drop !== null) as {
+      col: number;
+      row: number;
+      speed: number;
+    }[];
+
+    // Add new drops randomly
+    if (Math.random() > 0.7) {
+      this.addRaindrop();
     }
 
-    let frame = 0;
-    this.animationInterval = setInterval(() => {
-      for (let col = 0; col < this.MATRIX_SIZE; col++) {
-        for (let row = 0; row < this.MATRIX_SIZE; row++) {
-          const index = row * this.MATRIX_SIZE + col;
-          const wave = Math.sin((col + frame) * 0.4) * 6 + 8;
-          const wave2 = Math.cos((row + frame * 0.7) * 0.3) * 4 + 8;
+    // Continue the animation
+    this.rainAnimationFrame = requestAnimationFrame(() => this.animateRain());
+  }
 
-          if (Math.abs(row - wave) < 1.5 || Math.abs(col - wave2) < 1.5) {
-            this.toggleLED(index, true);
-          } else {
-            this.toggleLED(index, false);
+  playAnimation() {
+    this.isPlaying = true;
+
+    if (this.selectedPreset === 'rain') {
+      // Start rain animation if not already running
+      if (!this.rainAnimationFrame) {
+        this.animateRain();
+      }
+    } else if (this.selectedPreset === 'spiral') {
+      // Start spiral animation
+      if (this.spiralAnimationFrame) {
+        cancelAnimationFrame(this.spiralAnimationFrame);
+      }
+      this.animateSpiral();
+    } else {
+      // Original wave animation for other presets
+      if (this.animationInterval) {
+        clearInterval(this.animationInterval);
+      }
+
+      let frame = 0;
+      this.animationInterval = setInterval(() => {
+        for (let col = 0; col < this.MATRIX_SIZE; col++) {
+          for (let row = 0; row < this.MATRIX_SIZE; row++) {
+            const index = row * this.MATRIX_SIZE + col;
+            const wave = Math.sin((col + frame) * 0.4) * 6 + 8;
+            const wave2 = Math.cos((row + frame * 0.7) * 0.3) * 4 + 8;
+
+            if (Math.abs(row - wave) < 1.5 || Math.abs(col - wave2) < 1.5) {
+              this.toggleLED(index, true);
+            } else {
+              this.toggleLED(index, false);
+            }
           }
         }
-      }
-      frame += 0.3;
-    }, 120);
+        frame += 0.3;
+      }, 120);
+    }
   }
 
   pauseAnimation() {
-    if (this.animationInterval) {
-      clearInterval(this.animationInterval);
-      this.animationInterval = null;
-    }
-  }
+    this.isPlaying = false;
 
-  // Clean up animations
-  private cleanupAnimations() {
+    // Clear any running animations
     if (this.animationFrameId) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }
 
+    if (this.rainAnimationFrame) {
+      cancelAnimationFrame(this.rainAnimationFrame);
+      this.rainAnimationFrame = null;
+    }
+
+    if (this.spiralAnimationFrame) {
+      cancelAnimationFrame(this.spiralAnimationFrame);
+      this.spiralAnimationFrame = null;
+    }
+
     if (this.animationInterval) {
       clearInterval(this.animationInterval);
       this.animationInterval = null;
     }
 
-    if (this.patternInterval) {
-      clearInterval(this.patternInterval);
-      this.patternInterval = null;
-    }
+    // Setup code generation
+    this.setupCodeGeneration();
   }
 
-  // Update code preview
-  private updateCode() {
-    if (!this.codePreviewElement) return;
+  private setupCodeGeneration() {
+    // Generate initial code
+    this.updateGeneratedCode();
+    
+    // Update code whenever matrix changes
+    this.codeUpdateInterval = setInterval(() => {
+      this.updateGeneratedCode();
+    }, 1000);
+  }
 
-    let code = '// Generated Arduino Code\n';
-    code += '#include <FastLED.h>\n\n';
-    code += '#define NUM_LEDS 256\n';
-    code += '#define DATA_PIN 6\n\n';
-    code += 'CRGB leds[NUM_LEDS];\n\n';
-    code += 'void setup() {\n';
-    code += '  FastLED.addLeds<WS2812, DATA_PIN, GRB>(leds, NUM_LEDS);\n';
-    code += '}\n\n';
-    code += 'void loop() {\n';
-    code += '  // Clear all LEDs\n';
-    code += '  FastLED.clear();\n';
+  // Generate code based on current matrix state
+  private updateGeneratedCode() {
+    const activeLEDs = this.matrix
+      .map((led, index) => ({
+        x: index % this.MATRIX_SIZE,
+        y: Math.floor(index / this.MATRIX_SIZE),
+        color: led.active ? led.color : null
+      }))
+      .filter((led): led is {x: number, y: number, color: string} => led.color !== null);
 
-    // Add LED states
-    this.matrix.forEach((led, index) => {
-      if (led.active) {
-        const colorMap: { [key: string]: string } = {
-          green: 'CRGB::Green',
-          red: 'CRGB::Red',
-          blue: 'CRGB::Blue',
-          yellow: 'CRGB::Yellow',
-          purple: 'CRGB::Purple',
-          cyan: 'CRGB::Cyan',
-          white: 'CRGB::White',
-        };
+    const code = `// Generated LED Matrix Code
+#include <FastLED.h>
 
-        const color = colorMap[led.color] || 'CRGB::Black';
-        code += `  leds[${index}] = ${color};\n`;
-      }
-    });
+#define MATRIX_WIDTH 16
+#define MATRIX_HEIGHT 16
+#define NUM_LEDS (MATRIX_WIDTH * MATRIX_HEIGHT)
+#define DATA_PIN 6
 
-    code += '  \n';
-    code += '  // Show the LEDs\n';
-    code += '  FastLED.show();\n';
-    code += '  delay(50);\n';
-    code += '}\n';
+CRGB leds[NUM_LEDS];
 
-    this.codePreviewElement.nativeElement.textContent = code;
+void setup() {
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
+  FastLED.setBrightness(50);
+  clearLEDs();
+  
+  // Set up your LED pattern below
+  ${this.generateLEDSetupCode(activeLEDs)}
+  
+  FastLED.show();
+}
+
+void loop() {
+  // Add your animation code here
+}
+
+void clearLEDs() {
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
+}
+
+// Helper function to set an LED by x,y coordinates
+void setLED(int x, int y, const CRGB& color) {
+  if (x >= 0 && x < MATRIX_WIDTH && y >= 0 && y < MATRIX_HEIGHT) {
+    if (y % 2 == 0) {
+      leds[y * MATRIX_WIDTH + x] = color;
+    } else {
+      leds[(y + 1) * MATRIX_WIDTH - x - 1] = color;
+    }
+  }
+}`;
+
+    this.generatedCode = code;
   }
 
   // Navigation
@@ -482,14 +689,17 @@ export class Space3DPage implements OnInit, OnDestroy {
   loadPreset(preset: string) {
     this.selectedPreset = preset;
     this.isPlaying = false; // Reset play state when changing presets
-    
+
     // Only show playback controls for wave, rain, and spiral presets
     const validPresets = ['wave', 'rain', 'spiral'];
     this.showPlaybackControls = validPresets.includes(preset);
-    
+
     // Force UI update
     this.cdr.detectChanges();
-    
+
+    // Clear any existing animations first
+    this.pauseAnimation();
+
     switch (preset) {
       case 'wave':
         this.createWavePattern();
@@ -506,18 +716,6 @@ export class Space3DPage implements OnInit, OnDestroy {
     }
   }
 
-  // Copy code to clipboard
-  async copyCode() {
-    try {
-      await navigator.clipboard.writeText(
-        this.codePreviewElement.nativeElement.textContent
-      );
-      // TODO: Show success message
-      console.log('Code copied to clipboard');
-    } catch (err) {
-      console.error('Failed to copy code: ', err);
-    }
-  }
 
   // Add this method to handle touch move events for better drawing experience
   onTouchMove(event: TouchEvent) {
@@ -675,6 +873,149 @@ export class Space3DPage implements OnInit, OnDestroy {
       } else {
         this.playAnimation();
       }
+    }
+  }
+
+
+
+// ...
+
+  // Generate Arduino FastLED code
+  private generateArduinoCode(activeLEDs: {x: number, y: number, color: string}[]): string {
+    return `// Generated LED Matrix Code
+#include <FastLED.h>
+
+#define MATRIX_WIDTH 16
+#define MATRIX_HEIGHT 16
+#define NUM_LEDS (MATRIX_WIDTH * MATRIX_HEIGHT)
+#define DATA_PIN 6
+
+CRGB leds[NUM_LEDS];
+
+void setup() {
+  FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
+  FastLED.setBrightness(50);
+  clearLEDs();
+  
+  // Set up your LED pattern below
+  ${this.generateLEDSetupCode(activeLEDs)}
+  
+  FastLED.show();
+}
+
+void loop() {
+  // Add your animation code here
+}
+
+void clearLEDs() {
+  fill_solid(leds, NUM_LEDS, CRGB::Black);
+}
+
+// Helper function to set an LED by x,y coordinates (zigzag pattern)
+void setLED(int x, int y, const CRGB& color) {
+  if (x >= 0 && x < MATRIX_WIDTH && y >= 0 && y < MATRIX_HEIGHT) {
+    if (y % 2 == 0) {
+      leds[y * MATRIX_WIDTH + x] = color;
+    } else {
+      leds[(y + 1) * MATRIX_WIDTH - x - 1] = color;
+    }
+  }
+}`;
+  }
+
+  // Generate LED setup code based on active LEDs
+  private generateLEDSetupCode(leds: Array<{x: number, y: number, color: string | null}>): string {
+    if (!leds.length) return '// No active LEDs';
+
+    return leds
+      .filter((led): led is {x: number, y: number, color: string} => led.color !== null)
+      .map(led => {
+        const rgb = this.hexToRgb(led.color);
+        return `setLED(${led.x}, ${led.y}, CRGB(${rgb.r}, ${rgb.g}, ${rgb.b}));`;
+      })
+      .join('\n  ');
+  }
+
+  // Convert hex color to RGB
+  private hexToRgb(hex: string): {r: number, g: number, b: number} {
+    // Remove # if present
+    const hexValue = hex.replace('#', '');
+    
+    // Parse r, g, b values
+    const bigint = parseInt(hexValue, 16);
+    return {
+      r: (bigint >> 16) & 255,
+      g: (bigint >> 8) & 255,
+      b: bigint & 255
+    };
+  }
+
+
+  // Update the code preview in the UI
+  private updateCodePreview() {
+    if (this.codePreviewElement?.nativeElement) {
+      this.codePreviewElement.nativeElement.textContent = this.generatedCode;
+    }
+  }
+
+  // Copy code to clipboard with enhanced visual feedback
+  isCopied = false;
+  private copyTimeout: any;
+
+  async copyCode() {
+    try {
+      await navigator.clipboard.writeText(this.generatedCode);
+      
+      // Show success state
+      this.isCopied = true;
+      
+      // Create and show success toast
+      const toast = document.createElement('ion-toast');
+      toast.message = 'Kode berhasil disalin ke clipboard!';
+      toast.duration = 2000;
+      toast.position = 'top';
+      toast.cssClass = 'copy-toast';
+      
+      // Style the toast
+      toast.style.setProperty('--background', 'rgba(16, 185, 129, 0.95)');
+      toast.style.setProperty('--color', 'white');
+      toast.style.setProperty('--border-radius', '12px');
+      toast.style.setProperty('--box-shadow', '0 4px 16px rgba(16, 185, 129, 0.3)');
+      
+      document.body.appendChild(toast);
+      await toast.present();
+      
+      // Reset the copied state after animation
+      if (this.copyTimeout) {
+        clearTimeout(this.copyTimeout);
+      }
+      
+      this.copyTimeout = setTimeout(() => {
+        this.isCopied = false;
+        this.cdr.detectChanges();
+      }, 2000);
+      
+      return true;
+    } catch (err) {
+      console.error('Failed to copy code: ', err);
+      
+      // Show error toast if copy fails
+      const toast = document.createElement('ion-toast');
+      toast.message = '❌ Gagal menyalin kode. Silakan coba lagi.';
+      toast.duration = 3000;
+      toast.position = 'top';
+      toast.cssClass = 'error-toast';
+      
+      // Style the error toast
+      toast.style.setProperty('--background', 'rgba(239, 68, 68, 0.95)');
+      toast.style.setProperty('--color', 'white');
+      toast.style.setProperty('--border-radius', '12px');
+      toast.style.setProperty('--box-shadow', '0 4px 16px rgba(239, 68, 68, 0.3)');
+      
+      document.body.appendChild(toast);
+      await toast.present();
+      
+      return false;
     }
   }
 }
