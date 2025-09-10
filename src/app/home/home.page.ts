@@ -150,30 +150,16 @@ export class HomePage implements OnInit, OnDestroy {
 
   // Injected services
   private newsSubscription: Subscription | null = null;
-  private readonly newsService: NewsService;
-  private readonly cdr: ChangeDetectorRef;
-  private readonly authService: AuthService;
-  private readonly renderer: Renderer2;
-  private readonly router: Router;
-  private readonly el: ElementRef;
-  private readonly alertController: AlertController;
 
   constructor(
-    newsService: NewsService,
-    cdr: ChangeDetectorRef,
-    authService: AuthService,
-    renderer: Renderer2,
-    router: Router,
-    el: ElementRef,
-    alertController: AlertController
+    private router: Router,
+    private authService: AuthService,
+    private newsService: NewsService,
+    private alertController: AlertController,
+    private renderer: Renderer2,
+    private cdr: ChangeDetectorRef,
+    private el: ElementRef
   ) {
-    this.newsService = newsService;
-    this.cdr = cdr;
-    this.authService = authService;
-    this.renderer = renderer;
-    this.router = router;
-    this.el = el;
-    this.alertController = alertController;
     this.isLowEndDevice = this.checkLowEndDevice();
   }
 
@@ -536,8 +522,11 @@ export class HomePage implements OnInit, OnDestroy {
     console.log('[Profile] Falling back to initials');
     this.showInitials = true;
     this.userPhotoUrl = null;
-    this.processCount = 0;
     this.cdr.detectChanges();
+  }
+
+  navigateToAiChat() {
+    this.router.navigate(['/ai-chat']);
   }
 
   /**

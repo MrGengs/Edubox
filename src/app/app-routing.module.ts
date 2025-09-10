@@ -116,6 +116,15 @@ const routes: Routes = [
         (m) => m.PrivacyPolicyPageModule
       ),
   },
+  {
+    path: 'ai-chat',
+    loadChildren: () =>
+      import('./pages/ai-chat/ai-chat.module').then(
+        (m) => m.AiChatPageModule
+      ),
+    canActivate: [AuthGuard],
+    data: { requiresAuth: true },
+  },
 ];
 
 @NgModule({

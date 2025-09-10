@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      EduBox AI Assistant
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <!-- Chat Messages -->
+  <div class="chat-container" #chatContainer>
+    <div *ngFor="let message of messages" class="message" [ngClass]="{'user-message': message.isUser, 'ai-message': !message.isUser}">
+      <div class="message-content">
+        <div class="message-avatar" *ngIf="!message.isUser">
+          <ion-icon name="school" class="ai-icon"></ion-icon>
+        </div>
+        <div class="message-bubble" [ngClass]="{'user-bubble': message.isUser, 'ai-bubble': !message.isUser}">
+          <div class="message-text" [innerHTML]="message.text | markdown">
+          </div>
+          <div class="message-time">
+            {{ message.time | date:'shortTime' }}
+          </div>
+        </div>
+        <div class="message-avatar" *ngIf="message.isUser">
+          <ion-icon name="person-circle" class="user-icon"></ion-icon>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Loading indicator -->
+    <div *ngIf="isLoading" class="message ai-message">
+      <div class="message-content">
+        <div class="message-avatar">
+          <ion-icon name="school" class="ai-icon"></ion-icon>
+        </div>
+        <div class="message-bubble ai-bubble loading-bubble">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-container">
+    <ion-item class="message-input" lines="none">
+      <ion-textarea 
+        [(ngModel)]="newMessage" 
+        placeholder="Tanyakan sesuatu tentang EduBox..."
+        rows="1"
+        autoGrow="true"
+        [disabled]="isLoading"
+        (keyup.enter)="sendMessage()"
+      ></ion-textarea>
+      <ion-buttons slot="end">
+        <ion-button 
+          (click)="sendMessage()" 
+          [disabled]="!newMessage.trim() || isLoading"
+          fill="clear"
+          class="send-button"
+        >
+          <ion-icon name="send" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </div>
+</ion-content>

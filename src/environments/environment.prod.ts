@@ -11,3 +11,5 @@ export const environment = {
     appId: "1:456233826793:web:2d4da57204ca5e33d6f378"
   }
 };
+
+export const geminiApiKey = "AIzaSyAkIyXZk5Xk36eG4hrQ0aKlRlkg6B5gaw8";
