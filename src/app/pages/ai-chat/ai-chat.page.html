@@ -15,7 +15,7 @@
     <div *ngFor="let message of messages" class="message" [ngClass]="{'user-message': message.isUser, 'ai-message': !message.isUser}">
       <div class="message-content">
         <div class="message-avatar" *ngIf="!message.isUser">
-          <ion-icon name="school" class="ai-icon"></ion-icon>
+          <img src="assets/images/ai.png" alt="AI Assistant" class="ai-avatar">
         </div>
         <div class="message-bubble" [ngClass]="{'user-bubble': message.isUser, 'ai-bubble': !message.isUser}">
           <div class="message-text" [innerHTML]="message.text | markdown">
@@ -25,7 +25,21 @@
           </div>
         </div>
         <div class="message-avatar" *ngIf="message.isUser">
-          <ion-icon name="person-circle" class="user-icon"></ion-icon>
+          <div class="avatar-container">
+            <img
+              *ngIf="avatarImage"
+              [src]="avatarImage"
+              (error)="onImageError($event)"
+              (load)="onImageLoad($event)"
+              alt="Profile"
+              class="avatar-image"
+              [class.loaded]="imageLoaded"
+              [class.error]="imageError"
+            />
+            <div *ngIf="!avatarImage || imageError" class="avatar-fallback">
+              <span class="avatar-initials">{{ userInitials }}</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -34,7 +48,7 @@
     <div *ngIf="isLoading" class="message ai-message">
       <div class="message-content">
         <div class="message-avatar">
-          <ion-icon name="school" class="ai-icon"></ion-icon>
+          <img src="assets/images/ai.png" alt="AI Assistant" class="ai-avatar">
         </div>
         <div class="message-bubble ai-bubble loading-bubble">
           <div class="typing-indicator">
